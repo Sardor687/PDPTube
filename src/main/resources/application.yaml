@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: PdpTube
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pdptube
+    username: postgres
+    password: root123
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
