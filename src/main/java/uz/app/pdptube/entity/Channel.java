@@ -1,6 +1,7 @@
 package uz.app.pdptube.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,12 +35,16 @@ public class Channel {
             joinColumns = @JoinColumn(name = "channel_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    @JsonIgnore
     private List<User> followers;
 
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "owner_id", unique = true, nullable = false)
+    @JsonIgnore
     private User owner;
+
+
 
 
 

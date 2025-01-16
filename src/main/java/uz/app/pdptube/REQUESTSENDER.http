@@ -21,5 +21,9 @@ POST http://localhost:8080/pdptube/auth/signIn
 Content-Type: application/json
 
 {
-
+  "email": "sardor@gmail.com",
+  "password": "root123"
 }
+
+###
+

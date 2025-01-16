@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
@@ -24,24 +25,45 @@ public class MyFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        System.out.println(request.getServletPath());
         String authorization = request.getHeader("Authorization");
+        System.out.println(authorization);
         if (authorization == null){
             filterChain.doFilter(request, servletResponse);
             return;
         }
-        if ( authorization.startsWith("Bearer ")) {
-            authorization = authorization.substring(7);
-            String email = jwtProvider.getEmailFromToken(authorization);
+        authorization = authorization.substring(7);
+        String email = jwtProvider.getEmailFromToken(authorization);
             setUserToContext(email);
-        }
+
         filterChain.doFilter(servletRequest, servletResponse);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public void setUserToContext(String email) {
-        User user = (User) userDetailsService.loadUserByUsername(email);
+        // Load the user details (returns UserDetails, not a specific implementation)
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+
+        // Create an authentication token using the UserDetails object
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+        // Set the authentication token in the security context
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
+
 
 }

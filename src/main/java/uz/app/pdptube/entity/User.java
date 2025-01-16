@@ -43,7 +43,7 @@ public class User implements UserDetails {
 
 
     @JsonIgnore
-    @OneToOne(mappedBy = "owner")
+    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Channel channel;
 
 
@@ -54,6 +54,7 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "channel_id")
     )
+
     private List<Channel> subscriptions;
 
 
@@ -107,4 +108,16 @@ public class User implements UserDetails {
         return authorities;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", age=" + age +
+                ", profilePicture='" + profilePicture + '\'' +
+                '}';
+    }
 }
