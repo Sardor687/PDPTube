@@ -5,7 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.LinkedList;
 
 @Data
 @AllArgsConstructor
@@ -39,7 +39,7 @@ public class Comment {
     private Integer dislikes = 0;
 
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
-    private List<Comment> replies;
+    private LinkedList<Comment> replies;
 
     @ManyToOne
     private Comment parentComment;

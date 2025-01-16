@@ -1,0 +1,25 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+###
+
+POST http://localhost:8080/auth/signup
+Content-Type: application/json
+
+{
+  "firstName": "Sardor",
+  "lastName": "Olimjonov",
+  "email" : "sardor@gmail.com",
+  "password" : "root123",
+  "age" : 17
+}
+
+###
+
+POST http://localhost:8080/pdptube/auth/signIn
+Content-Type: application/json
+
+{
+
+}
