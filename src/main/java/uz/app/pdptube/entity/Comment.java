@@ -21,9 +21,8 @@ public class Comment {
     @JoinColumn(nullable = false)
     private User author;
 
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private Video video;
+
+    private Integer videoId;
 
     @Column(nullable = false)
     private String text;

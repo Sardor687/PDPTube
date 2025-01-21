@@ -8,6 +8,7 @@ import uz.app.pdptube.dto.ChannelDTO;
 import uz.app.pdptube.entity.Channel;
 import uz.app.pdptube.entity.Channel_Owner;
 import uz.app.pdptube.entity.User;
+import uz.app.pdptube.helper.Helper;
 import uz.app.pdptube.payload.ResponseMessage;
 import uz.app.pdptube.repository.ChannelOwnerRepository;
 import uz.app.pdptube.repository.ChannelRepository;
@@ -22,11 +23,9 @@ public class ChannelService {
     private final UserRepository userRepository;
     private final ChannelOwnerRepository channelOwnerRepository;
 
-    public User getCurrentPrincipal() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }
+
     public ResponseMessage getChannel(){
-        User principal = getCurrentPrincipal();
+        User principal = Helper.getCurrentPrincipal();
         Optional<Channel_Owner> optionalChannelOwner = channelOwnerRepository.findByOwner(principal.getId());
         if (optionalChannelOwner.isPresent()) {
             Channel_Owner channelOwner = optionalChannelOwner.get();
@@ -46,7 +45,7 @@ public class ChannelService {
 
 
     public ResponseMessage createChannel(ChannelDTO channelDTO){
-        Optional<Channel_Owner> relation = channelOwnerRepository.findByOwner(getCurrentPrincipal().getId());
+        Optional<Channel_Owner> relation = channelOwnerRepository.findByOwner(Helper.getCurrentPrincipal().getId());
         if (relation.isPresent()) {
             Optional<Channel> byId = channelRepository.findById(relation.get().getChannel());
             if (byId.isPresent()) {
@@ -62,7 +61,7 @@ public class ChannelService {
                     .build();
             channelRepository.save(newChannel);
             Channel_Owner channelOwner = new Channel_Owner();
-            channelOwner.setOwner(getCurrentPrincipal().getId());
+            channelOwner.setOwner(Helper.getCurrentPrincipal().getId());
             channelOwner.setChannel(newChannel.getId());
             channelOwnerRepository.save(channelOwner);
             return new ResponseMessage(true, "Your channel has been created", newChannel);
@@ -87,7 +86,7 @@ public class ChannelService {
 
     @Transactional
     public ResponseMessage deleteChannel() {
-       User principal = getCurrentPrincipal();
+       User principal = Helper.getCurrentPrincipal();
         Optional<Channel_Owner> relation = channelOwnerRepository.findByOwner(principal.getId());
         if (relation.isPresent()) {
             Channel_Owner channelOwner = relation.get();

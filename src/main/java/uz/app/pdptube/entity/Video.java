@@ -34,9 +34,6 @@ public class Video {
     @Column(nullable = false)
     private String videoLink;
 
-    @OneToMany(mappedBy = "video")
-    private List<Comment> comments;
-
     @Column(nullable = false)
     private Integer likes = 0;
 

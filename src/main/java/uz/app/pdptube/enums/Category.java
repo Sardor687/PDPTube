@@ -1,12 +1,12 @@
 package uz.app.pdptube.enums;
 
 public enum Category {
+    UNDEFINED("undefined"),
     ENTERTAINMENT("entertainment"),
     EDUCATION("education"),
     SPORTS("sports"),
     MUSIC("music"),
-    GAMING("gaming"),
-    UNDEFINED("undefined");
+    GAMING("gaming");
 
     private final String displayName;
 

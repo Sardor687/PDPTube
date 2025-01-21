@@ -27,3 +27,23 @@ Content-Type: application/json
 
 ###
 
+GET localhost:8080/pdptube/video
+Authorization: ------
+
+###
+
+# 4. `/videos`
+    - `POST /video/comment` — Video kommentini yozish uchun to'g'ri yo'l.
+    - `POST /video/comment/like` — Kommentga like qo'shish uchun to'g'ri yo'l.
+    - `DELETE /video/comment` — Video kommentini o'chirish uchun to'g'ri yo'l.
+    - `POST /video/comment/dislike` — Kommentga dislike qo'shish uchun to'g'ri yo'l.
+    - `POST /video/comment/reply` — Kommentga javob yozish uchun to'g'ri yo'l.
+    - `POST /video/add-to-playlist` — Videoni playlistga qo'shish uchun to'g'ri yo'l.
+
+
+
+### 5. `/playlist`
+   - `GET /playlist` — Foydalanuvchining playlistlarini olish uchun to'g'ri yo'l.
+    - `POST /playlist/add` — Yangi playlist yaratish uchun to'g'ri yo'l.
+    - `DELETE /playlist/delete` — Playlistni o'chirish uchun to'g'ri yo'l.
+    - `GET /playlist/videos` — Playlistdagi videolarni olish uchun to'g'ri yo'l.
