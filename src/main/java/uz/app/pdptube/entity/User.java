@@ -41,40 +41,6 @@ public class User implements UserDetails {
 
     private String profilePicture;
 
-
-    @JsonIgnore
-    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Channel channel;
-
-
-    @JsonIgnore
-    @ManyToMany
-    @JoinTable(
-            name = "user_subscriptions",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "channel_id")
-    )
-
-    private List<Channel> subscriptions;
-
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "owner")
-    private List<Playlist> playlists;
-
-
-    @JsonIgnore
-    @ManyToMany
-    @JoinTable(
-            name = "user_liked_videos",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "video_id")
-    )
-    private List<Video> likedVideos;
-
-
-
-
     @Override
     public String getUsername() {
         return email; // Email login sifatida ishlatiladi

@@ -21,17 +21,6 @@ public class Playlist {
     @Column(nullable = false, unique = true)
     private String title;
 
-    @ManyToMany
-    @JoinTable(
-            name = "playlist_videos",
-            joinColumns = @JoinColumn(name = "playlist_id"),
-            inverseJoinColumns = @JoinColumn(name = "video_id")
-    )
-    private List<Video> videos;
 
-
-    @ManyToOne
-    @JoinColumn(name = "owner_id", nullable = false)
-    private User owner;
 
 }

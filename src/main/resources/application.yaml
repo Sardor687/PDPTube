@@ -7,7 +7,7 @@ spring:
     password: root123
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
   main:
     allow-bean-definition-overriding: true

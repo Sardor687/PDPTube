@@ -22,11 +22,4 @@ public class History {
     @JoinColumn(nullable = false)
     private User owner;
 
-    @ManyToMany
-    @JoinTable(
-            name = "history_videos",
-            joinColumns = @JoinColumn(name = "history_id"),
-            inverseJoinColumns = @JoinColumn(name = "video_id")
-    )
-    private Set<Video> videos;
 }
