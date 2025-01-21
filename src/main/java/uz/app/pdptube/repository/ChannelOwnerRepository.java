@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface ChannelOwnerRepository extends JpaRepository<Channel_Owner, Integer> {
     Optional<Channel_Owner> findByOwner(Integer ownerId);
+    Optional<Channel_Owner> findByChannel(Integer channelId);
 
 }

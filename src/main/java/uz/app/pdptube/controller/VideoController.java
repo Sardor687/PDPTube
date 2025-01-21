@@ -34,5 +34,9 @@ public class VideoController {
         return ResponseEntity.status(serviceResponse.success() ? HttpStatus.ACCEPTED : HttpStatus.NOT_FOUND).body(serviceResponse);
     }
 
-
+    @DeleteMapping("/delete/{videoId}")
+    public ResponseEntity<?> deleteVideo(@PathVariable Integer videoId) {
+        ResponseMessage serviceResponse = videoService.deleteVideo(videoId);
+        return ResponseEntity.status(serviceResponse.success() ? HttpStatus.OK : HttpStatus.BAD_REQUEST).body(serviceResponse);
+    }
 }

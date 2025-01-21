@@ -13,6 +13,7 @@ import uz.app.pdptube.payload.ResponseMessage;
 import uz.app.pdptube.repository.ChannelOwnerRepository;
 import uz.app.pdptube.repository.ChannelRepository;
 import uz.app.pdptube.repository.UserRepository;
+import uz.app.pdptube.repository.VideoRepository;
 
 import java.util.Optional;
 
@@ -20,9 +21,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ChannelService {
     private final ChannelRepository channelRepository;
-    private final UserRepository userRepository;
     private final ChannelOwnerRepository channelOwnerRepository;
-
+    private final VideoRepository videoRepository;
 
     public ResponseMessage getChannel(){
         User principal = Helper.getCurrentPrincipal();
@@ -92,7 +92,9 @@ public class ChannelService {
             Channel_Owner channelOwner = relation.get();
             Optional<Channel> optionalChannel = channelRepository.findById(channelOwner.getChannel());
             if (optionalChannel.isPresent()) {
-                channelRepository.delete(optionalChannel.get());
+                Channel channel = optionalChannel.get();
+                deleteAllVideosByChannelId(channel);
+                channelRepository.delete(channel);
                 channelOwnerRepository.delete(channelOwner);
                 return new ResponseMessage(true, "Your channel has been deleted", channelOwner);
             }else {
@@ -101,6 +103,9 @@ public class ChannelService {
         }else {
             return new ResponseMessage(false, "you don't have a channel", principal);
         }
+    }
+    public void deleteAllVideosByChannelId(Channel channel) {
+        videoRepository.deleteByChannel(channel);
     }
 }
 
