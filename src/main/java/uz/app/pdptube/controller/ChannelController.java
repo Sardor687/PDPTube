@@ -32,10 +32,7 @@ public class ChannelController {
     }
 
 
-    //videolar borligi sababli o'chirib bo'lmayapti, o'zim to'girlab qo'yaman hech kim tegmasin!!!
-    //bitta videoni o'chirish,
-    //kanalni o'chirishda videolarni ham o'chib ketishi
-    //shu case lar hali to'g'irlanmadi
+
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteChannel() {
         ResponseMessage serviceResponse =  channelService.deleteChannel();

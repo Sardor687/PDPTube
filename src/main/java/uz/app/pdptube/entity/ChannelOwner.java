@@ -1,17 +1,19 @@
 package uz.app.pdptube.entity;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Data;
 
 @Entity
-public class History_Videos {
+@Data
+public class ChannelOwner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer history;
-    private Integer video;
+    private Integer channel;
+
+    private Integer owner;
 }

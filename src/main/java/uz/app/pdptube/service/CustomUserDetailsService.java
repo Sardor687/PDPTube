@@ -13,17 +13,15 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Fetch user from your database
         uz.app.pdptube.entity.User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username));
-
-        // Convert to Spring Security UserDetails
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
-                user.getAuthorities() // Ensure authorities are properly fetched
+                user.getAuthorities()
         );
     }
 }

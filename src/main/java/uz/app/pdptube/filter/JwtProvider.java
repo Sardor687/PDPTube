@@ -13,12 +13,12 @@ import java.util.Date;
 
 @Component
 public class JwtProvider {
-
     @Value("${jwt.secret-key}")
     private String key;
-
     @Value("${jwt.expire-timeout}")
     private Long expireTimeout;
+
+
 
     public String generateToken(String email){
         Date date =new Date(System.currentTimeMillis()+expireTimeout);
@@ -31,14 +31,18 @@ public class JwtProvider {
                 .compact();
     }
 
+
     public String getEmailFromToken(String token){
         Claims claims = getClaims(token);
         return claims.getSubject();
     }
 
+
     public Claims getClaims(String token){
         return Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token).getBody();
     }
+
+
     public Key getKey(){
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(key));
     }

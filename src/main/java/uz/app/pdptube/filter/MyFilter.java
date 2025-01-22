@@ -26,7 +26,6 @@ public class MyFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String authorization = request.getHeader("Authorization");
-        System.out.println(authorization);
         if (authorization == null){
             filterChain.doFilter(request, servletResponse);
             return;

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.app.pdptube.entity.Comment;
 import uz.app.pdptube.entity.Video;
+import uz.app.pdptube.helper.Helper;
 import uz.app.pdptube.payload.ResponseMessage;
 import uz.app.pdptube.repository.CommentRepository;
 import uz.app.pdptube.repository.VideoRepository;
@@ -17,13 +18,15 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final VideoRepository videoRepository;
 
-    //Error otyapti (2-martalik), keyin to'g'irlayman
-    /*public ResponseMessage getVideoComments(Integer videoId) {
-       *//* Optional<Video> optionalVideo = videoRepository.findById(videoId);
+    public ResponseMessage getVideoComments(Integer videoId) {
+        Optional<Video> optionalVideo = videoRepository.findById(videoId);
         if (!optionalVideo.isPresent()) {
             return new ResponseMessage(false, "video doesn't exist with this videoId: " + videoId, null);
-        }*//*
-
+        }
+        Video video = optionalVideo.get();
+        if (Helper.ageRestricted(video)) {
+            return new ResponseMessage(false, "you are not old enough!!!", null);
+        }
         Optional<List<Comment>> optionalComments = commentRepository.findAllByVideoId(videoId);
         if (optionalComments.isPresent()) {
             List<Comment> comments = optionalComments.get();
@@ -36,5 +39,5 @@ public class CommentService {
         }else {
             return new ResponseMessage(false, "no comments found for this video id", videoId);
         }
-    }*/
+    }
 }

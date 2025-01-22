@@ -3,16 +3,18 @@ package uz.app.pdptube.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.app.pdptube.dto.VideoDTO;
-import uz.app.pdptube.entity.Channel;
-import uz.app.pdptube.entity.Channel_Owner;
-import uz.app.pdptube.entity.Video;
+import uz.app.pdptube.entity.*;
 import uz.app.pdptube.helper.Helper;
 import uz.app.pdptube.payload.ResponseMessage;
 import uz.app.pdptube.repository.ChannelOwnerRepository;
+import uz.app.pdptube.repository.UserDislikedVideosRepository;
+import uz.app.pdptube.repository.UserLikedVideosRepository;
 import uz.app.pdptube.repository.VideoRepository;
 
 import java.util.List;
 import java.util.Optional;
+
+import static uz.app.pdptube.helper.Helper.ageRestricted;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +22,8 @@ public class VideoService {
     private final VideoRepository videoRepository;
     private final ChannelService channelService;
     private final ChannelOwnerRepository channelOwnerRepository;
+    private final UserLikedVideosRepository userLikedVideosRepository;
+    private final UserDislikedVideosRepository userDislikedVideosRepository;
     public ResponseMessage getVideo(Integer id) {
         Optional<Video> optionalVideo = videoRepository.findById(id);
 
@@ -34,11 +38,6 @@ public class VideoService {
         } else {
             return new ResponseMessage(false, "video with this id doesn't exist", id);
         }
-    }
-    private boolean ageRestricted(Video video) {
-        int ageRestriction = video.getAgeRestriction();
-        int age = Helper.getCurrentPrincipal().getAge();
-        return (ageRestriction > age);
     }
     public ResponseMessage getVideos() {
         List<Video> videos = videoRepository.findAll();
@@ -75,9 +74,18 @@ public class VideoService {
             if (ageRestricted(video)) {
                 return new ResponseMessage(false, "you are not old enough!", Helper.getCurrentPrincipal().getAge());
             }
-            video.setLikes(video.getLikes() + 1);
-            videoRepository.save(video);
-            return new ResponseMessage(true, "Video liked", video);
+            boolean previouslyLiked = userLikedVideosRepository.existsByOwnerAndVideo(Helper.getCurrentPrincipal().getId(), videoId);
+            if (previouslyLiked) {
+                return new ResponseMessage(false, "you are already liked the video before!", video);
+            }else {
+                video.setLikes(video.getLikes() + 1);
+                videoRepository.save(video);
+                UserLikedVideos userLikedVideos = new UserLikedVideos();
+                userLikedVideos.setVideo(video.getId());
+                userLikedVideos.setOwner(Helper.getCurrentPrincipal().getId());
+                userLikedVideosRepository.save(userLikedVideos);
+                return new ResponseMessage(true, "Video liked", video);
+            }
         } else {
             return new ResponseMessage(false, "video with this id doesn't exist", videoId);
         }
@@ -89,9 +97,18 @@ public class VideoService {
             if (ageRestricted(video)) {
                 return new ResponseMessage(false, "you are not old enough!", Helper.getCurrentPrincipal().getAge());
             }
-            video.setDislikes(video.getDislikes() + 1);
-            videoRepository.save(video);
-            return new ResponseMessage(true, "Video disliked", video);
+            boolean previouslyDisliked = userDislikedVideosRepository.existsByOwnerAndVideo(Helper.getCurrentPrincipal().getId(), videoId);
+            if (previouslyDisliked) {
+                return new ResponseMessage(false, "you  already disliked the video before!", video);
+            }else {
+                video.setDislikes(video.getDislikes() + 1);
+                videoRepository.save(video);
+                UserDislikedVideos userDislikedVideos = new UserDislikedVideos();
+                userDislikedVideos.setVideo(video.getId());
+                userDislikedVideos.setOwner(Helper.getCurrentPrincipal().getId());
+                userDislikedVideosRepository.save(userDislikedVideos);
+                return new ResponseMessage(true, "Video disliked", video);
+            }
         } else {
             return new ResponseMessage(false, "video with this id doesn't exist", videoId);
         }
@@ -101,9 +118,9 @@ public class VideoService {
         if (optionalVideo.isPresent()) {
             Video video = optionalVideo.get();
             Channel channel = video.getChannel();
-            Optional<Channel_Owner> optionalRelation = channelOwnerRepository.findByChannel(channel.getId());
+            Optional<ChannelOwner> optionalRelation = channelOwnerRepository.findByChannel(channel.getId());
             if (optionalRelation.isPresent()) {
-                Channel_Owner relation = optionalRelation.get();
+                ChannelOwner relation = optionalRelation.get();
                 Integer owner = relation.getOwner();
                 if (owner.equals(Helper.getCurrentPrincipal().getId())) {
                     videoRepository.delete(video);
@@ -118,5 +135,4 @@ public class VideoService {
             return new ResponseMessage(false, "video with this id doesn't exist", videoId);
         }
     }
-
 }

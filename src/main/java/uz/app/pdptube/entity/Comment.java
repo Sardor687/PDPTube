@@ -37,11 +37,8 @@ public class Comment {
     @Column(nullable = false)
     private Integer dislikes = 0;
 
-    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
-    private LinkedList<Comment> replies;
-
-    @ManyToOne
-    private Comment parentComment;
+    @Column
+    private Integer parentCommentId;
 
     @PrePersist
     public void setDefaults() {

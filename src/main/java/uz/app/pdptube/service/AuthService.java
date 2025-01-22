@@ -23,12 +23,13 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
     private final MyFilter myFilter;
+
+
     public ResponseMessage signUp(UserDTO userDTO) {
         boolean existsByEmail = userRepository.existsByEmail(userDTO.getEmail());
         if (existsByEmail) {
             return new ResponseMessage(false, "email already exists", userDTO.getEmail());
         }
-
         User user = User.builder()
                 .email(userDTO.getEmail())
                 .password(userDTO.getPassword())
@@ -39,10 +40,6 @@ public class AuthService {
         userRepository.save(user);
         return new ResponseMessage(true, "User registered", user);
     }
-
-
-
-
     public ResponseMessage signIn(SignInDTO emailAndPassword) {
         Optional<User> optionalUser = userRepository.findByEmail(emailAndPassword.getEmail());
         if (optionalUser.isPresent()) {

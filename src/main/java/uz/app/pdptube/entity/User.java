@@ -34,6 +34,7 @@ public class User implements UserDetails {
     private String email;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
     @Column(nullable = false)
@@ -42,31 +43,37 @@ public class User implements UserDetails {
     private String profilePicture;
 
     @Override
+    @JsonIgnore
     public String getUsername() {
         return email; // Email login sifatida ishlatiladi
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true; // Hisob muddati tugamagan
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true; // Hisob bloklanmagan
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true; // Foydalanuvchi ma'lumotlari amal qiladi
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return true; // Foydalanuvchi faolligi
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // Simple role (masalan: USER yoki ADMIN)
         List<GrantedAuthority> authorities = new ArrayList<>();

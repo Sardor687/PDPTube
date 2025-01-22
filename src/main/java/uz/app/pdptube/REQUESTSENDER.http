@@ -33,6 +33,8 @@ Authorization: ------
 ###
 
 # 4. `/videos`
+
+
     - `POST /video/comment` — Video kommentini yozish uchun to'g'ri yo'l.
     - `POST /video/comment/like` — Kommentga like qo'shish uchun to'g'ri yo'l.
     - `DELETE /video/comment` — Video kommentini o'chirish uchun to'g'ri yo'l.

@@ -6,11 +6,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Channel_Followers {
+public class PlaylistOwner {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    private Integer follower;
-    private Integer channel;
+    private Integer playlist;
+    private Integer owner;
 }

@@ -8,6 +8,7 @@ public enum Category {
     MUSIC("music"),
     GAMING("gaming");
 
+
     private final String displayName;
 
 

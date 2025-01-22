@@ -31,12 +31,12 @@ public class WatchController {
         return ResponseEntity.status(serviceResponse.success() ? HttpStatus.OK : HttpStatus.NOT_FOUND).body(serviceResponse);
     }
 
-    //Error otyapti (2-martalik), keyin to'g'irlayman
-   /* @GetMapping("/video/comments/${videoId}")
+
+
+    @GetMapping("/video/comments/{videoId}")
     public ResponseEntity<?> getVideoComments(@PathVariable Integer videoId) {
         ResponseMessage serviceResponse = commentService.getVideoComments(videoId);
         return ResponseEntity.status(serviceResponse.success() ? HttpStatus.OK : HttpStatus.NOT_FOUND).body(serviceResponse);
-    }*/
-
+    }
 
 }
