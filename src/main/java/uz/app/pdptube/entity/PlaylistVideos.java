@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Playlist_Videos {
+public class PlaylistVideos {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
