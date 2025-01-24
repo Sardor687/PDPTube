@@ -4,13 +4,13 @@ GET https://examples.http-client.intellij.net/get
 
 ###
 
-POST http://localhost:8080/auth/signup
+POST https://strong-lynelle-wjmlvbcy-6cdaec0b.koyeb.app/pdptube/swagger-ui/index.html#/auth-controller/signUp
 Content-Type: application/json
 
 {
-  "firstName": "Sardor",
-  "lastName": "Olimjonov",
-  "email" : "sardor@gmail.com",
+  "firstName": "user01",
+  "lastName": "user01",
+  "email" : "user@gmail.com",
   "password" : "root123",
   "age" : 17
 }
