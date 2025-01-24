@@ -54,9 +54,9 @@ public class SecurityConfiguration {
 
         // Specify allowed origins
         config.setAllowedOrigins(List.of(
-                "http://localhost:8080",        // Local Swagger UI
-                "http://localhost:5173",        // Local frontend
-                "https://strong-lynelle-wjmlvbcy-6cdaec0b.koyeb.app" // Deployed app
+                "*"  // Local Swagger UI
+//                "http://localhost:5173",        // Local frontend
+//                "https://strong-lynelle-wjmlvbcy-6cdaec0b.koyeb.app" // Deployed app
         ));
 
         // Allow all headers
