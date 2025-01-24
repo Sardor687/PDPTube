@@ -2,24 +2,22 @@ spring:
   application:
     name: PdpTube
   datasource:
-    url: jdbc:postgresql://localhost:5432/pdptube
-    username: postgres
-    password: root123
+    url: jdbc:postgresql://dpg-cu9m8tpu0jms73fh0a3g-a.oregon-postgres.render.com:5432/wjmlvbcy_pdptube
+    username: wjmlvbcy_pdptube_user
+    password: wLfic44IBCEQ4nhMngyihFAeJg6nRzbO
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: update # Choose 'none', 'validate', 'create', or 'update' based on your needs
+    show-sql: true # Enable SQL logs in the console
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   main:
     allow-bean-definition-overriding: true
 
 jwt:
   secret-key: "753778214125442A472D4B6150645367566B59703373367639792F423F452848"
   expire-timeout: 36000000
-#springdoc:
-#  swagger-ui:
-#    path: /swagger-ui
-#  api-docs:
-#    path: /v3/api-docs
 
 server:
   servlet:
