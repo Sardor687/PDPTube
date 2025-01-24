@@ -27,17 +27,16 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth.requestMatchers(
-                                "/auth/**",
-                                "/watch/**",
-                                "/videos/**",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/swagger-resources/**",
-                                "/webjars/**"
-                        ).permitAll()
-                        .anyRequest()
-                        .authenticated()
-
+                                        "/auth/**",
+                                        "/watch/**",
+                                        "/videos/**",
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs/**",
+                                        "/swagger-resources/**",
+                                        "/webjars/**"
+                                ).permitAll()
+                                .anyRequest()
+                                .authenticated()
                 )
                 .addFilterBefore(myFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -52,14 +51,26 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // Specify allowed origins
         config.setAllowedOrigins(List.of(
-                "http://localhost:8080",
-                "https://strong-lynelle-wjmlvbcy-6cdaec0b.koyeb.app",
-                "http://localhost:5173"));
+                "http://localhost:8080",        // Local Swagger UI
+                "http://localhost:5173",        // Local frontend
+                "https://strong-lynelle-wjmlvbcy-6cdaec0b.koyeb.app" // Deployed app
+        ));
+
+        // Allow all headers
+        config.setAllowedHeaders(List.of("*"));
+
+        // Allow all standard HTTP methods
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // Allow credentials (cookies, authorization headers)
         config.setAllowCredentials(true);
+
+        // Register the CORS configuration for all endpoints
         source.registerCorsConfiguration("/**", config);
+
         return source;
     }
 }
