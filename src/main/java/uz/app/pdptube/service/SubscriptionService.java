@@ -49,7 +49,7 @@ public class SubscriptionService {
         }
 
 
-        Optional<ChannelOwner> channelOwner = channelOwnerRepository.findById(channelId);
+        Optional<ChannelOwner> channelOwner = channelOwnerRepository.findByChannel(channelId);
         if (channelOwner.isEmpty()) {
             return new ResponseMessage(false, "channelOwner relationda yoq , lekin Channel bor , backenda xato", channelId);
         } else {

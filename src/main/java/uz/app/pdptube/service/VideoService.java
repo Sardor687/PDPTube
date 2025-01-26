@@ -2,6 +2,7 @@ package uz.app.pdptube.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uz.app.pdptube.dto.VideoDTO;
 import uz.app.pdptube.entity.*;
 import uz.app.pdptube.helper.Helper;
@@ -67,6 +68,7 @@ public class VideoService {
             return new ResponseMessage(false, "you don't have a channel , so you can't post video", videoDTO);
         }
     }
+    @Transactional
     public ResponseMessage likeVideo(Integer videoId) {
         Optional<Video> optionalVideo = videoRepository.findById(videoId);
         if (optionalVideo.isPresent()) {
@@ -78,19 +80,27 @@ public class VideoService {
             if (previouslyLiked) {
                 return new ResponseMessage(false, "you are already liked the video before!", video);
             }else {
-                video.setLikes(video.getLikes() + 1);
+                if (userDislikedVideosRepository.existsByOwnerAndVideo(Helper.getCurrentPrincipal().getId(), videoId)){
+                    userDislikedVideosRepository.deleteByOwnerAndVideo(Helper.getCurrentPrincipal().getId(), videoId);
+                    video.setLikes(video.getLikes() + 1);
+                    video.setDislikes(video.getDislikes() - 1);
+                }else {
+                    video.setLikes(video.getLikes() + 1);
+                }
                 videoRepository.save(video);
                 UserLikedVideos userLikedVideos = new UserLikedVideos();
                 userLikedVideos.setVideo(video.getId());
                 userLikedVideos.setOwner(Helper.getCurrentPrincipal().getId());
                 userLikedVideosRepository.save(userLikedVideos);
-                userDislikedVideosRepository.deleteByOwnerAndVideo(Helper.getCurrentPrincipal().getId(),video.getId());
                 return new ResponseMessage(true, "Video liked", video);
             }
         } else {
             return new ResponseMessage(false, "video with this id doesn't exist", videoId);
         }
     }
+
+
+    @Transactional
     public ResponseMessage dislikeVideo(Integer videoId) {
         Optional<Video> optionalVideo = videoRepository.findById(videoId);
         if (optionalVideo.isPresent()) {
@@ -102,13 +112,18 @@ public class VideoService {
             if (previouslyDisliked) {
                 return new ResponseMessage(false, "you  already disliked the video before!", video);
             }else {
-                video.setDislikes(video.getDislikes() + 1);
+                if (userLikedVideosRepository.existsByOwnerAndVideo(Helper.getCurrentPrincipal().getId(), videoId)) {
+                    userLikedVideosRepository.deleteByOwnerAndVideo(Helper.getCurrentPrincipal().getId(), videoId);
+                    video.setDislikes(video.getDislikes() + 1);
+                    video.setLikes(video.getLikes() - 1);
+                }else {
+                    video.setDislikes(video.getDislikes() + 1);
+                }
                 videoRepository.save(video);
                 UserDislikedVideos userDislikedVideos = new UserDislikedVideos();
                 userDislikedVideos.setVideo(video.getId());
                 userDislikedVideos.setOwner(Helper.getCurrentPrincipal().getId());
                 userDislikedVideosRepository.save(userDislikedVideos);
-                userLikedVideosRepository.deleteByOwnerAndVideo(Helper.getCurrentPrincipal().getId(), video.getId());
                 return new ResponseMessage(true, "Video disliked", video);
             }
         } else {
