@@ -1,8 +1,8 @@
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\config\SecurityConfiguration.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\config\SwaggerConfiguration.java
-C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\config\WebConfig.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\controller\AuthController.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\controller\ChannelController.java
+C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\controller\PlaylistController.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\controller\SubscriptionController.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\controller\VideoController.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\controller\WatchController.java
@@ -16,7 +16,6 @@ C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\entity\Comment.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\entity\History.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\entity\HistoryVideos.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\entity\Playlist.java
-C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\entity\PlaylistOwner.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\entity\PlaylistVideos.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\entity\Subscription.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\entity\User.java
@@ -32,6 +31,8 @@ C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\PdpTubeApplication.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\repository\ChannelOwnerRepository.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\repository\ChannelRepository.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\repository\CommentRepository.java
+C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\repository\PlaylistRepository.java
+C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\repository\PlaylistVideosRepository.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\repository\SubscriptionRepository.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\repository\UserDislikedVideosRepository.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\repository\UserLikedVideosRepository.java
@@ -41,5 +42,6 @@ C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\AuthService.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\ChannelService.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\CommentService.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\CustomUserDetailsService.java
+C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\PlaylistService.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\SubscriptionService.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\VideoService.java

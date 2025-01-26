@@ -1,5 +1,6 @@
 uz\app\pdptube\entity\User$UserBuilder.class
 uz\app\pdptube\filter\JwtProvider.class
+uz\app\pdptube\service\PlaylistService.class
 uz\app\pdptube\controller\VideoController.class
 uz\app\pdptube\repository\UserLikedVideosRepository.class
 uz\app\pdptube\controller\WatchController.class
@@ -25,6 +26,7 @@ uz\app\pdptube\controller\ChannelController.class
 uz\app\pdptube\repository\SubscriptionRepository.class
 uz\app\pdptube\dto\ChannelDTO.class
 uz\app\pdptube\entity\UserLikedVideos.class
+uz\app\pdptube\repository\PlaylistRepository.class
 uz\app\pdptube\entity\ChannelOwner.class
 uz\app\pdptube\entity\Channel$ChannelBuilder.class
 uz\app\pdptube\entity\History.class
@@ -38,13 +40,14 @@ uz\app\pdptube\entity\History$HistoryBuilder.class
 uz\app\pdptube\dto\UserDTO.class
 uz\app\pdptube\filter\MyFilter.class
 uz\app\pdptube\entity\UserDislikedVideos.class
+uz\app\pdptube\controller\PlaylistController.class
 uz\app\pdptube\dto\SignInDTO$SignInDTOBuilder.class
 uz\app\pdptube\config\SecurityConfiguration.class
 uz\app\pdptube\entity\HistoryVideos.class
 uz\app\pdptube\dto\VideoDTO$VideoDTOBuilder.class
+uz\app\pdptube\repository\PlaylistVideosRepository.class
 uz\app\pdptube\service\CustomUserDetailsService.class
 uz\app\pdptube\dto\ChannelDTO$ChannelDTOBuilder.class
-uz\app\pdptube\entity\PlaylistOwner.class
 uz\app\pdptube\dto\SignInDTO.class
 uz\app\pdptube\entity\PlaylistVideos.class
 uz\app\pdptube\entity\Video$VideoBuilder.class

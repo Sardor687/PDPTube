@@ -7,10 +7,7 @@ import uz.app.pdptube.dto.VideoDTO;
 import uz.app.pdptube.entity.*;
 import uz.app.pdptube.helper.Helper;
 import uz.app.pdptube.payload.ResponseMessage;
-import uz.app.pdptube.repository.ChannelOwnerRepository;
-import uz.app.pdptube.repository.UserDislikedVideosRepository;
-import uz.app.pdptube.repository.UserLikedVideosRepository;
-import uz.app.pdptube.repository.VideoRepository;
+import uz.app.pdptube.repository.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +22,8 @@ public class VideoService {
     private final ChannelOwnerRepository channelOwnerRepository;
     private final UserLikedVideosRepository userLikedVideosRepository;
     private final UserDislikedVideosRepository userDislikedVideosRepository;
+    private final PlaylistVideosRepository playlistVideosRepository;
+
     public ResponseMessage getVideo(Integer id) {
         Optional<Video> optionalVideo = videoRepository.findById(id);
 
@@ -143,6 +142,7 @@ public class VideoService {
                     videoRepository.delete(video);
                     userDislikedVideosRepository.deleteByVideo(video.getId());
                     userLikedVideosRepository.deleteByVideo(video.getId());
+                    playlistVideosRepository.deleteByVideo(video.getId());
                     return new ResponseMessage(true, "Video deleted", video);
                 } else {
                     return new ResponseMessage(false, "you can't delete this video because you are not the owner", videoId);
