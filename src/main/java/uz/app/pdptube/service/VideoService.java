@@ -84,6 +84,7 @@ public class VideoService {
                 userLikedVideos.setVideo(video.getId());
                 userLikedVideos.setOwner(Helper.getCurrentPrincipal().getId());
                 userLikedVideosRepository.save(userLikedVideos);
+                userDislikedVideosRepository.deleteByOwnerAndVideo(Helper.getCurrentPrincipal().getId(),video.getId());
                 return new ResponseMessage(true, "Video liked", video);
             }
         } else {
@@ -107,6 +108,7 @@ public class VideoService {
                 userDislikedVideos.setVideo(video.getId());
                 userDislikedVideos.setOwner(Helper.getCurrentPrincipal().getId());
                 userDislikedVideosRepository.save(userDislikedVideos);
+                userLikedVideosRepository.deleteByOwnerAndVideo(Helper.getCurrentPrincipal().getId(), video.getId());
                 return new ResponseMessage(true, "Video disliked", video);
             }
         } else {
@@ -124,6 +126,8 @@ public class VideoService {
                 Integer owner = relation.getOwner();
                 if (owner.equals(Helper.getCurrentPrincipal().getId())) {
                     videoRepository.delete(video);
+                    userDislikedVideosRepository.deleteByVideo(video.getId());
+                    userLikedVideosRepository.deleteByVideo(video.getId());
                     return new ResponseMessage(true, "Video deleted", video);
                 } else {
                     return new ResponseMessage(false, "you can't delete this video because you are not the owner", videoId);
