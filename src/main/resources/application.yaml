@@ -25,4 +25,4 @@ jwt:
 
 server:
   servlet:
-    context-path: /pdptube
+    context-path: /
