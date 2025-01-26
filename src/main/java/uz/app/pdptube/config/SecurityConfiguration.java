@@ -1,10 +1,18 @@
 package uz.app.pdptube.config;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.servers.Server;
 import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -16,8 +24,16 @@ import uz.app.pdptube.repository.UserRepository;
 import java.util.List;
 
 @Configuration
+@EnableWebSecurity
+@EnableMethodSecurity()
+@OpenAPIDefinition(info = @Info(title = "PDPTUBE API", version = "1.2.5"), servers = {
+        @Server(url = "https://pdptube.koyeb.app", description = "Production Server"),
+        @Server(url = "http://localhost:8080", description = "Local Development Server")
+}, security = @SecurityRequirement(name = "bearerAuth"))
+@SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
 @RequiredArgsConstructor
 public class SecurityConfiguration {
+
     final UserRepository userRepository;
     final Filter myFilter;
 
@@ -29,7 +45,6 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth.requestMatchers(
                                         "/auth/**",
                                         "/watch/**",
-                                        "/videos/**",
                                         "/swagger-ui/**",
                                         "/v3/api-docs/**",
                                         "/swagger-resources/**",
@@ -46,7 +61,7 @@ public class SecurityConfiguration {
     public UserDetailsService userDetailsService() {
         return email -> userRepository.findByEmail(email).orElseThrow();
     }
-
+/*
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -72,5 +87,24 @@ public class SecurityConfiguration {
         source.registerCorsConfiguration("/**", config);
 
         return source;
+    }*/
+
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedOrigins(List.of(
+                "http://localhost:8080",
+                "https://pdptube.koyeb.app",
+                "http://localhost:5173"));
+        config.setAllowCredentials(true);
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
+
+
+
 }
