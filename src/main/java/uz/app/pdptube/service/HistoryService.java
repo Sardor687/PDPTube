@@ -42,7 +42,7 @@ public class HistoryService {
             }
             return new ResponseMessage(true, "here are all the videos in your history", videosList);
         }else {
-            return new ResponseMessage(false, "you haven't watched a video so far", optionalHistory.get());
+            return new ResponseMessage(false, "you haven't watched a video so far", optionalHistory);
         }
     }
 

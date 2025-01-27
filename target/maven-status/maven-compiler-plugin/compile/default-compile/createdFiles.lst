@@ -24,6 +24,7 @@ uz\app\pdptube\entity\Comment$CommentBuilder.class
 uz\app\pdptube\enums\Category.class
 uz\app\pdptube\dto\VideoDTO.class
 uz\app\pdptube\repository\CommentRepository.class
+uz\app\pdptube\service\HistoryService.class
 uz\app\pdptube\controller\ChannelController.class
 uz\app\pdptube\repository\SubscriptionRepository.class
 uz\app\pdptube\dto\ChannelDTO.class
@@ -35,6 +36,7 @@ uz\app\pdptube\entity\Channel$ChannelBuilder.class
 uz\app\pdptube\entity\History.class
 uz\app\pdptube\entity\Playlist.class
 uz\app\pdptube\entity\Video.class
+uz\app\pdptube\repository\HistoryRepository.class
 uz\app\pdptube\service\ChannelService.class
 uz\app\pdptube\entity\Playlist$PlaylistBuilder.class
 uz\app\pdptube\repository\UserRepository.class
@@ -56,5 +58,7 @@ uz\app\pdptube\entity\PlaylistVideos.class
 uz\app\pdptube\entity\Video$VideoBuilder.class
 uz\app\pdptube\service\VideoService.class
 uz\app\pdptube\PdpTubeApplication.class
+uz\app\pdptube\controller\HistoryController.class
 uz\app\pdptube\entity\Comment.class
 uz\app\pdptube\service\SubscriptionService.class
+uz\app\pdptube\repository\HistoryVideosRepository.class

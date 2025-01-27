@@ -23,6 +23,9 @@ public class VideoService {
     private final UserLikedVideosRepository userLikedVideosRepository;
     private final UserDislikedVideosRepository userDislikedVideosRepository;
     private final PlaylistVideosRepository playlistVideosRepository;
+    private final HistoryService historyService;
+    private final HistoryRepository historyRepository;
+    private final HistoryVideosRepository historyVideosRepository;
 
     public ResponseMessage getVideo(Integer id) {
         Optional<Video> optionalVideo = videoRepository.findById(id);
@@ -37,6 +40,32 @@ public class VideoService {
             }
             video.setViews(video.getViews() + 1);
             videoRepository.save(video);
+            ResponseMessage serviceResponse = historyService.getHistory();
+            //this part might need some checkings
+            if (!serviceResponse.success()) {
+                if (serviceResponse.message().contains("xato!")) {
+                    return serviceResponse;
+                }else {
+                    History history = new History();
+                    history.setOwner(Helper.getCurrentPrincipal());
+                    historyRepository.save(history);
+                    HistoryVideos historyVideos = new HistoryVideos();
+                    History historyWithId = historyRepository.findByOwner(Helper.getCurrentPrincipal()).get();
+                    if (historyWithId == null) {
+                        return new ResponseMessage(false, "backendda nimadur rekursiv hato", history);
+                    }else {
+                        historyVideos.setHistory(historyWithId.getId());
+                        historyVideos.setVideo(video.getId());
+                        historyVideosRepository.save(historyVideos);
+                    }
+                }
+            }else {
+                HistoryVideos historyVideos = new HistoryVideos();
+                History history = historyRepository.findByOwner(Helper.getCurrentPrincipal()).get();
+                historyVideos.setHistory(history.getId());
+                historyVideos.setVideo(video.getId());
+                historyVideosRepository.save(historyVideos);
+            }
             return new ResponseMessage(true, "here is the video", video);
         } else {
             return new ResponseMessage(false, "video with this id doesn't exist", id);
@@ -159,9 +188,11 @@ public class VideoService {
                 Integer owner = relation.getOwner();
                 if (owner.equals(Helper.getCurrentPrincipal().getId())) {
                     videoRepository.delete(video);
-                    userDislikedVideosRepository.deleteByVideo(video.getId());
-                    userLikedVideosRepository.deleteByVideo(video.getId());
-                    playlistVideosRepository.deleteByVideo(video.getId());
+                    Integer id = video.getId();
+                    userDislikedVideosRepository.deleteByVideo(id);
+                    userLikedVideosRepository.deleteByVideo(id);
+                    playlistVideosRepository.deleteByVideo(id);
+                    historyVideosRepository.deleteByVideo(id);
                     return new ResponseMessage(true, "Video deleted", video);
                 } else {
                     return new ResponseMessage(false, "you can't delete this video because you are not the owner", videoId);

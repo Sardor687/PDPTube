@@ -4,6 +4,7 @@ C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\config\SwaggerConfiguration.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\controller\AuthController.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\controller\ChannelController.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\controller\FileController.java
+C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\controller\HistoryController.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\controller\PlaylistController.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\controller\SubscriptionController.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\controller\VideoController.java
@@ -33,6 +34,8 @@ C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\PdpTubeApplication.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\repository\ChannelOwnerRepository.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\repository\ChannelRepository.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\repository\CommentRepository.java
+C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\repository\HistoryRepository.java
+C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\repository\HistoryVideosRepository.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\repository\PlaylistRepository.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\repository\PlaylistVideosRepository.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\repository\SubscriptionRepository.java
@@ -44,6 +47,7 @@ C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\AuthService.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\ChannelService.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\CommentService.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\CustomUserDetailsService.java
+C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\HistoryService.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\PlaylistService.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\SubscriptionService.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\VideoService.java

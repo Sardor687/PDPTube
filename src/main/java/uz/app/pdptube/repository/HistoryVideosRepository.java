@@ -8,4 +8,6 @@ import java.util.List;
 public interface HistoryVideosRepository extends JpaRepository<HistoryVideos, Integer> {
     List<HistoryVideos> findAllByHistory(Integer historyId);
     void deleteByHistory(Integer historyId);
+    void deleteByVideo(Integer videoId);
+
 }
