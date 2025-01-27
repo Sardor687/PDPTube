@@ -146,6 +146,8 @@ public class VideoService {
             return new ResponseMessage(false, "video with this id doesn't exist", videoId);
         }
     }
+
+    @Transactional
     public ResponseMessage deleteVideo(Integer videoId) {
         Optional<Video> optionalVideo = videoRepository.findById(videoId);
         if (optionalVideo.isPresent()) {

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import uz.app.pdptube.entity.Channel;
 import uz.app.pdptube.entity.ChannelOwner;
 import uz.app.pdptube.entity.Subscription;
@@ -77,6 +78,7 @@ public class SubscriptionService {
 
     }
 
+    @Transactional
     public ResponseMessage unsubscribeFromChannel(Integer channelId) {
         User currentUser = Helper.getCurrentPrincipal();
 

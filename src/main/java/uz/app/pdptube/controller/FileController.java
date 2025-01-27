@@ -9,14 +9,17 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import uz.app.pdptube.entity.ChannelOwner;
 import uz.app.pdptube.entity.Video;
 import uz.app.pdptube.helper.Helper;
 import uz.app.pdptube.payload.ResponseMessage;
+import uz.app.pdptube.repository.ChannelOwnerRepository;
 import uz.app.pdptube.repository.VideoRepository;
 import uz.app.pdptube.service.VideoService;
 import uz.app.pdptube.service.VideoStorageService;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Controller for video storage operations via multipart file upload.
@@ -28,12 +31,14 @@ public class FileController {
 
     private final VideoStorageService videoStorageService;
     private final VideoRepository videoRepository;
+    private final ChannelOwnerRepository channelOwnerRepository;
 
     @Autowired
-    public FileController(VideoService videoService, VideoStorageService videoStorageService, VideoRepository videoRepository) {
+    public FileController(VideoService videoService, VideoStorageService videoStorageService, VideoRepository videoRepository, ChannelOwnerRepository channelOwnerRepository) {
         this.videoService = videoService;
         this.videoStorageService = videoStorageService;
         this.videoRepository = videoRepository;
+        this.channelOwnerRepository = channelOwnerRepository;
     }
 
     /**
@@ -53,11 +58,19 @@ public class FileController {
         if (videoId == null) {
             return ResponseEntity.badRequest().body("No video id provided");
         }
-        ResponseMessage serviceResponse = videoService.getVideo(videoId);
-        if (serviceResponse.success()){
-            Video video = (Video) serviceResponse.data();
+        Optional<Video> optionalVideo = videoRepository.findById(videoId);
+        if (!optionalVideo.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No video found with id " + videoId);
+        }
+        Video video = optionalVideo.get();
             System.out.println(video);
-            if (Helper.getCurrentPrincipal().getId().equals(video.getId())) {
+        Optional<ChannelOwner> optionalChannel = channelOwnerRepository.findByChannel(video.getChannel().getId());
+        boolean present = optionalChannel.isPresent();
+        if (!present) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Channel bor lekin channelOwner relation yoq , backendda xato: " + video.getChannel());
+        }
+        ChannelOwner channelOwner = optionalChannel.get();
+        if (Helper.getCurrentPrincipal().getId().equals(channelOwner.getOwner())) {
                 if (video.getVideoLink().equalsIgnoreCase("String") || video.getVideoLink().isEmpty() || video.getVideoLink().isBlank()) {
                     String videoUrl = videoStorageService.storeVideo(file);
                     video.setVideoLink(videoUrl);
@@ -69,9 +82,7 @@ public class FileController {
             }else{
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("This video isn't yours , so you can't upload the file!");
             }
-        }else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(serviceResponse.toString());
-        }
+
     }
 
     /**

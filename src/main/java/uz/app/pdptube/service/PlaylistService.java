@@ -90,6 +90,7 @@ public class PlaylistService {
         }
     }
 
+
     public ResponseMessage updatePlaylist(Integer playlistId, String newTitle) {
         List<Playlist> playlists = playlistRepository.findByOwner(Helper.getCurrentPrincipal().getId());
 
@@ -111,7 +112,9 @@ public class PlaylistService {
             return new ResponseMessage(false, "Playlist with this id doesn't exist", playlistId);
         }
     }
-
+     private boolean fileUploaded(String videoLink){
+        return !(videoLink.equalsIgnoreCase("String") || videoLink.isEmpty() || videoLink.isBlank());
+    }
     public ResponseMessage addVideoToPlaylist(Integer playlistId, Integer videoId) {
         Optional<Video> optionalVideo = videoRepository.findById(videoId);
         if (optionalVideo.isPresent()) {
@@ -119,6 +122,13 @@ public class PlaylistService {
             if (optionalPlaylist.isPresent()) {
                 Playlist playlist = optionalPlaylist.get();
                 if (playlist.getOwner().equals(Helper.getCurrentPrincipal().getId())) {
+                    Video video = optionalVideo.get();
+                    if (!fileUploaded(video.getVideoLink())) {
+                        return new ResponseMessage(false, "video with this idea doesn't have a file yet, so it is not active", video.getVideoLink());
+                    }
+                    if (playlistVideosRepository.existsByPlaylistAndVideo(playlistId, videoId)) {
+                        return new ResponseMessage(false, "video with this idea already exists in playlist  " + playlistId, videoId);
+                    }
                     PlaylistVideos playlistVideos = new PlaylistVideos();
                     playlistVideos.setPlaylist(playlistId);
                     playlistVideos.setVideo(videoId);

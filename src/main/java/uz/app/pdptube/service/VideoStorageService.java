@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 public class VideoStorageService {
     private static final Logger logger = LoggerFactory.getLogger(VideoStorageService.class);
     private static final String VIDEO_PREFIX = "video/";
-    private static final long MAX_FILE_SIZE = 250 * 1024 * 1024; // 250MB (videos are generally larger)
+    private static final long MAX_FILE_SIZE = 500 * 1024 * 1024; // 250MB (videos are generally larger)
     private static final String[] ALLOWED_CONTENT_TYPES = {
             "video/mp4", "video/webm", "video/ogg"
     };
@@ -106,7 +106,7 @@ public class VideoStorageService {
         if (file.getSize() > MAX_FILE_SIZE) {
             logger.error("File size exceeds limit: {} bytes", file.getSize());
             throw new IllegalArgumentException(
-                    "Whoa there! That video is too large (over 50MB)! Compress it a bit! 🏋️‍♂️");
+                    "Whoa there! That video is too large (over 250MB)! Compress it a bit! 🏋️‍♂️");
         }
 
         String contentType = file.getContentType();
