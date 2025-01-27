@@ -1,7 +1,9 @@
+C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\config\S3Config.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\config\SecurityConfiguration.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\config\SwaggerConfiguration.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\controller\AuthController.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\controller\ChannelController.java
+C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\controller\FileController.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\controller\PlaylistController.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\controller\SubscriptionController.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\controller\VideoController.java
@@ -45,3 +47,4 @@ C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\CustomUserDetailsService.j
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\PlaylistService.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\SubscriptionService.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\VideoService.java
+C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\VideoStorageService.java

@@ -32,6 +32,9 @@ public class VideoService {
             if (ageRestricted(video)) {
                 return new ResponseMessage(false, "you are not old enough!", Helper.getCurrentPrincipal().getAge());
             }
+            if (!fileUploaded(video.getVideoLink())){
+                return new ResponseMessage(false, "video doesn't have its file yet, first upload the file!", video);
+            }
             video.setViews(video.getViews() + 1);
             videoRepository.save(video);
             return new ResponseMessage(true, "here is the video", video);
@@ -42,7 +45,12 @@ public class VideoService {
     public ResponseMessage getVideos() {
         List<Video> videos = videoRepository.findAll();
         Integer age = Helper.getCurrentPrincipal().getAge();
-        List<Video> filteredVideos = videos.stream().filter(video -> video.getAgeRestriction() <= age).toList();
+        List<Video> filteredVideos = videos.stream()
+                .filter(video -> video.getAgeRestriction() <= age)
+                .filter(video -> {
+                    return fileUploaded(video.getVideoLink());
+                })
+                .toList();
         return new ResponseMessage(true, "Here are all the videos", filteredVideos);
     }
     public ResponseMessage postVideo(VideoDTO videoDTO) {
@@ -62,10 +70,13 @@ public class VideoService {
                     .views(0)
                     .build();
             videoRepository.save(video);
-            return new ResponseMessage(true, "Video posted", video);
+            return new ResponseMessage(true, "Video posted, now please upload the file!", video);
         } else {
             return new ResponseMessage(false, "you don't have a channel , so you can't post video", videoDTO);
         }
+    }
+    private boolean fileUploaded(String videoLink){
+        return !(videoLink.equalsIgnoreCase("String") || videoLink.isEmpty() || videoLink.isBlank());
     }
     @Transactional
     public ResponseMessage likeVideo(Integer videoId) {
@@ -79,6 +90,9 @@ public class VideoService {
             if (previouslyLiked) {
                 return new ResponseMessage(false, "you are already liked the video before!", video);
             }else {
+                if (!fileUploaded(video.getVideoLink())){
+                    return new ResponseMessage(false, "video doesn't have its file yet, first owner must upload the file!", video);
+                }
                 if (userDislikedVideosRepository.existsByOwnerAndVideo(Helper.getCurrentPrincipal().getId(), videoId)){
                     userDislikedVideosRepository.deleteByOwnerAndVideo(Helper.getCurrentPrincipal().getId(), videoId);
                     video.setLikes(video.getLikes() + 1);
@@ -111,6 +125,9 @@ public class VideoService {
             if (previouslyDisliked) {
                 return new ResponseMessage(false, "you  already disliked the video before!", video);
             }else {
+                if (!fileUploaded(video.getVideoLink())){
+                    return new ResponseMessage(false, "video doesn't have its file yet, first owner must upload the file!", video);
+                }
                 if (userLikedVideosRepository.existsByOwnerAndVideo(Helper.getCurrentPrincipal().getId(), videoId)) {
                     userLikedVideosRepository.deleteByOwnerAndVideo(Helper.getCurrentPrincipal().getId(), videoId);
                     video.setDislikes(video.getDislikes() + 1);

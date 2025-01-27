@@ -1,6 +1,7 @@
 uz\app\pdptube\entity\User$UserBuilder.class
 uz\app\pdptube\filter\JwtProvider.class
 uz\app\pdptube\service\PlaylistService.class
+uz\app\pdptube\config\S3Config.class
 uz\app\pdptube\controller\VideoController.class
 uz\app\pdptube\repository\UserLikedVideosRepository.class
 uz\app\pdptube\controller\WatchController.class
@@ -8,6 +9,7 @@ uz\app\pdptube\config\SwaggerConfiguration.class
 uz\app\pdptube\entity\Subscription.class
 uz\app\pdptube\repository\ChannelOwnerRepository.class
 uz\app\pdptube\service\CommentService.class
+uz\app\pdptube\controller\FileController.class
 uz\app\pdptube\payload\ResponseMessage.class
 uz\app\pdptube\service\AuthService.class
 uz\app\pdptube\entity\User.class
@@ -28,6 +30,7 @@ uz\app\pdptube\dto\ChannelDTO.class
 uz\app\pdptube\entity\UserLikedVideos.class
 uz\app\pdptube\repository\PlaylistRepository.class
 uz\app\pdptube\entity\ChannelOwner.class
+uz\app\pdptube\service\VideoStorageService.class
 uz\app\pdptube\entity\Channel$ChannelBuilder.class
 uz\app\pdptube\entity\History.class
 uz\app\pdptube\entity\Playlist.class
