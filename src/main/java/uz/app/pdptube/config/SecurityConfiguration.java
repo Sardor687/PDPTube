@@ -27,7 +27,7 @@ import java.util.List;
 @EnableWebSecurity
 @EnableMethodSecurity()
 @OpenAPIDefinition(info = @Info(title = "PDPTUBE API", version = "1.2.5"), servers = {
-        @Server(url = "https://pdptube.koyeb.app", description = "Production Server"),
+        @Server(url = "https://examproject.koyeb.app", description = "Production Server"),
         @Server(url = "http://localhost:8080", description = "Local Development Server")
 }, security = @SecurityRequirement(name = "bearerAuth"))
 @SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
@@ -98,7 +98,7 @@ public class SecurityConfiguration {
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedOrigins(List.of(
                 "http://localhost:8080",
-                "https://pdptube.koyeb.app",
+                "https://examproject.koyeb.app",
                 "http://localhost:5173"));
         config.setAllowCredentials(true);
         source.registerCorsConfiguration("/**", config);
