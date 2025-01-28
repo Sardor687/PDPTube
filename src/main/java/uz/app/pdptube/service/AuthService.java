@@ -45,16 +45,16 @@ public class AuthService {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
 
-        if (user == null) {
-            return new ResponseMessage(false, "email not found", emailAndPassword.getEmail());
-        }
-        if (!user.getPassword().equals(emailAndPassword.getPassword())) {
-            return new ResponseMessage(false, "password incorrect", emailAndPassword);
-        }
-        // JWT bilan userDetails filter qoshilganda , contextga user qoshish esdan chiqmasin
-        myFilter.setUserToContext(user.getEmail());
+            if (user == null) {
+                return new ResponseMessage(false, "email not found", emailAndPassword.getEmail());
+            }
+            if (!user.getPassword().equals(emailAndPassword.getPassword())) {
+                return new ResponseMessage(false, "password incorrect", emailAndPassword);
+            }
+            // JWT bilan userDetails filter qoshilganda , contextga user qoshish esdan chiqmasin
+            myFilter.setUserToContext(user.getEmail());
 
-        return new ResponseMessage(true, "User logged in", jwtProvider.generateToken(user.getEmail()));
+            return new ResponseMessage(true, "User logged in", jwtProvider.generateToken(user.getEmail()));
         }else {
             return new ResponseMessage(false, "email not found", emailAndPassword.getEmail());
         }

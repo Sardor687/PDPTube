@@ -42,6 +42,7 @@ public class User implements UserDetails {
 
     private String profilePicture;
 
+
     @Override
     @JsonIgnore
     public String getUsername() {

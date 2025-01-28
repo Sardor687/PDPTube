@@ -81,7 +81,7 @@ public class CommentService {
             return new ResponseMessage(false, "Comment not found", commentId);
         }else {
             Comment comment = commentOpt.get();
-            if (userLikedCommentsRepository.findByComment(commentId).isPresent()) {
+            if (userLikedCommentsRepository.findByComment(comment.getId()).isPresent()) {
                 return new ResponseMessage(false, "Comment already liked before", comment);
             }else {
                 Optional<UserDislikedComments> byComment = userDislikedCommentsRepository.findByComment(commentId);
@@ -92,7 +92,7 @@ public class CommentService {
                     userDislikedCommentsRepository.delete(byComment.get());
                     UserLikedComments userLikedComments = new UserLikedComments();
                     userLikedComments.setOwner(Helper.getCurrentPrincipal().getId());
-                    userLikedComments.setComment(commentId);
+                    userLikedComments.setComment(comment.getId());
                     userLikedCommentsRepository.save(userLikedComments);
                     return new ResponseMessage(true, "Comment liked successfully", comment);
                 }else {
@@ -101,6 +101,7 @@ public class CommentService {
                     UserLikedComments userLikedComments = new UserLikedComments();
                     userLikedComments.setComment(comment.getId());
                     userLikedComments.setOwner(Helper.getCurrentPrincipal().getId());
+                    userLikedCommentsRepository.save(userLikedComments);
                     return new ResponseMessage(true, "Successfully liked the comment", comment);
                 }
             }
@@ -115,7 +116,7 @@ public class CommentService {
             Comment comment = commentOpt.get();
             Optional<UserDislikedComments> optionalRelation = dislikedCommentsRepository.findByComment(comment.getId());
             if (optionalRelation.isPresent()){
-                return new ResponseMessage(false, "You are already disliked", comment);
+                return new ResponseMessage(false, "You already disliked this comment", comment);
             }else {
                 Optional<UserLikedComments> userLikedCommentsOptional = userLikedCommentsRepository.findByComment(comment.getId());
                 if (userLikedCommentsOptional.isPresent()){

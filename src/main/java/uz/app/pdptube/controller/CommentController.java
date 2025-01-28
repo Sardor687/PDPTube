@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.app.pdptube.dto.CommentDTO;
+import uz.app.pdptube.dto.ReplyDTO;
 import uz.app.pdptube.service.CommentService;
 import uz.app.pdptube.payload.ResponseMessage;
 
@@ -57,8 +58,8 @@ public class CommentController {
     }
 
     @PostMapping("/reply")
-    public ResponseEntity<?> addReply(@RequestBody CommentDTO commentDTO) {
-        ResponseMessage serviceResponse = commentService.addReply(commentDTO);
-
+    public ResponseEntity<?> addReply(@RequestBody ReplyDTO replyDTO) {
+        ResponseMessage serviceResponse = commentService.addReply(replyDTO);
+        return ResponseEntity.status(serviceResponse.success()? HttpStatus.OK : HttpStatus.BAD_REQUEST).body(serviceResponse);
     }
 }
