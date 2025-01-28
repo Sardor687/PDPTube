@@ -84,7 +84,7 @@ public class ChannelService {
         }
     }
     private void deleteAllVideosByChannelId(Channel channel) {
-        videoRepository.deleteByChannel(channel);
+        videoRepository.deleteAllByChannel(channel);
     }
 }
 

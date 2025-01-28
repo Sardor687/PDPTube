@@ -16,4 +16,8 @@ public class Helper {
         int age = Helper.getCurrentPrincipal().getAge();
         return (ageRestriction > age);
     }
+
+    public static boolean fileUploaded(String videoLink){
+        return !(videoLink.equalsIgnoreCase("String") || videoLink.isEmpty() || videoLink.isBlank());
+    }
 }

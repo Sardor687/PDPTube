@@ -10,7 +10,7 @@ public interface PlaylistVideosRepository extends JpaRepository<PlaylistVideos, 
 
     List<PlaylistVideos> findByPlaylist(Integer playlistId);
 
-    void deleteByVideo(Integer videoId);
+    void deleteAllByVideo(Integer videoId);
 
     boolean existsByPlaylistAndVideo(Integer playlistId, Integer videoId);
 }

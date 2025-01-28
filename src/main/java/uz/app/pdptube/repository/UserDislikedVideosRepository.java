@@ -6,6 +6,6 @@ import uz.app.pdptube.entity.UserDislikedVideos;
 
 public interface UserDislikedVideosRepository extends JpaRepository<UserDislikedVideos, Integer> {
     boolean existsByOwnerAndVideo(Integer userId, Integer videoId);
-    void deleteByVideo(Integer videoId);
+    void deleteAllByVideo(Integer videoId);
     void deleteByOwnerAndVideo(Integer userId, Integer videoId);
 }

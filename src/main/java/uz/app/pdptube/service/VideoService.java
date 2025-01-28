@@ -11,6 +11,7 @@ import uz.app.pdptube.repository.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static uz.app.pdptube.helper.Helper.ageRestricted;
 
@@ -26,6 +27,9 @@ public class VideoService {
     private final HistoryService historyService;
     private final HistoryRepository historyRepository;
     private final HistoryVideosRepository historyVideosRepository;
+    private final UserLikedCommentsRepository userLikedCommentsRepository;
+    private final UserDislikedCommentsRepository userDislikedCommentsRepository;
+    private final CommentRepository commentRepository;
 
     public ResponseMessage getVideo(Integer id) {
         Optional<Video> optionalVideo = videoRepository.findById(id);
@@ -189,10 +193,23 @@ public class VideoService {
                 if (owner.equals(Helper.getCurrentPrincipal().getId())) {
                     videoRepository.delete(video);
                     Integer id = video.getId();
-                    userDislikedVideosRepository.deleteByVideo(id);
-                    userLikedVideosRepository.deleteByVideo(id);
-                    playlistVideosRepository.deleteByVideo(id);
-                    historyVideosRepository.deleteByVideo(id);
+                    userDislikedVideosRepository.deleteAllByVideo(id);
+                    userLikedVideosRepository.deleteAllByVideo(id);
+                    playlistVideosRepository.deleteAllByVideo(id);
+                    historyVideosRepository.deleteAllByVideo(id);
+                    Optional<List<Comment>> allByVideoId = commentRepository.findAllByVideoId(id);
+                    if (allByVideoId.isPresent()) {
+                        List<Comment> comments = allByVideoId.get();
+                        for (Comment comment : comments) {
+                            commentRepository.delete(comment);
+                            Integer commentId = comment.getId();
+                            commentRepository.deleteByParentCommentId(commentId);
+                            userLikedCommentsRepository.deleteAllByComment(commentId);
+                            userDislikedCommentsRepository.deleteAllByComment(commentId);
+                        }
+                    }else {
+                        commentRepository.deleteAllByVideoId(id);
+                    }
                     return new ResponseMessage(true, "Video deleted", video);
                 } else {
                     return new ResponseMessage(false, "you can't delete this video because you are not the owner", videoId);
@@ -203,5 +220,21 @@ public class VideoService {
         } else {
             return new ResponseMessage(false, "video with this id doesn't exist", videoId);
         }
+    }
+
+    public ResponseMessage searchVideos(String title) {
+        // Nomi bo'yicha qidirish
+        List<Video> videos = videoRepository.findByTitleContainingIgnoreCase(title);
+
+        if (videos.isEmpty()) {
+            return new ResponseMessage(false, "No videos found with the given title", null);
+        }
+
+        // VideoDTO'larni yaratish va qaytarish
+        List<VideoDTO> videoDTOs = videos.stream()
+                .map(video -> new VideoDTO(video.getTitle(), video.getDescription(), video.getCategory(), video.getAgeRestriction(), video.getVideoLink()))
+                .collect(Collectors.toList());
+
+        return new ResponseMessage(true, "Videos found", videoDTOs);
     }
 }

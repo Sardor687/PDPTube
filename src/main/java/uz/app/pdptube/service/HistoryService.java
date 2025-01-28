@@ -52,7 +52,7 @@ public class HistoryService {
         Optional<History> optionalHistory = historyRepository.findByOwner(principal);
         if (optionalHistory.isPresent()) {
             History history = optionalHistory.get();
-            historyVideosRepository.deleteByHistory(history.getId());
+            historyVideosRepository.deleteAllByHistory(history.getId());
             return new ResponseMessage(true, "history refreshed", historyVideosRepository.findAllByHistory(history.getId()));
         }else {
             return new ResponseMessage(false, "you don't have any videos in your history", optionalHistory.get());

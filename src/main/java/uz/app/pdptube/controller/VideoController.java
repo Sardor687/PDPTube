@@ -70,4 +70,11 @@ public class VideoController {
         ResponseMessage serviceResponse = videoService.deleteVideo(videoId);
         return ResponseEntity.status(serviceResponse.success() ? HttpStatus.OK : HttpStatus.BAD_REQUEST).body(serviceResponse);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchVideos(@RequestParam String title) {
+        ResponseMessage responseMessage = videoService.searchVideos(title);
+        return ResponseEntity.status(responseMessage.success() ? HttpStatus.OK : HttpStatus.NOT_FOUND)
+                .body(responseMessage);
+    }
 }
