@@ -77,7 +77,16 @@ public class VideoService {
     }
     public ResponseMessage getVideos() {
         List<Video> videos = videoRepository.findAll();
-        Integer age = Helper.getCurrentPrincipal().getAge();
+        boolean isRegistered = true;
+        if (Helper.getCurrentPrincipal() == null) {
+            isRegistered = false;
+        }
+        Integer age;
+        if (isRegistered) {
+            age = Helper.getCurrentPrincipal().getAge();
+        } else {
+            age = 1000;
+        }
         List<Video> filteredVideos = videos.stream()
                 .filter(video -> video.getAgeRestriction() <= age)
                 .filter(video -> {
