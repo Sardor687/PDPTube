@@ -14,10 +14,12 @@ import uz.app.pdptube.payload.ResponseMessage;
 import uz.app.pdptube.repository.ChannelOwnerRepository;
 import uz.app.pdptube.repository.ChannelRepository;
 import uz.app.pdptube.repository.SubscriptionRepository;
+import uz.app.pdptube.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +28,46 @@ public class SubscriptionService {
     private final ChannelOwnerRepository channelOwnerRepository;
     private final ChannelService channelService;
     private final ChannelRepository channelRepository;
+    private final UserRepository userRepository;
+
+
+    public ResponseMessage getSubscribers() {
+        Integer currentUserId = Helper.getCurrentPrincipal().getId();
+
+        //Chanel egasini tekshirish
+        Optional<ChannelOwner> channelOwner = channelOwnerRepository.findByOwner(currentUserId);
+        if (channelOwner.isEmpty()) {
+            return new ResponseMessage(false, "You don't own a channel, please create channel", null);
+        }
+
+        //Channel idsini olish
+        Integer channelId = channelOwner.get().getChannel();
+
+        //Channelga obuna foyga foydalanuvchilarni olish
+        List<Subscription> subscriptions = subscriptionRepository.findAllByChannel(channelId);
+
+        if (subscriptions.isEmpty()) {
+            return new ResponseMessage(true, "No subscribers found for this channel", List.of());
+        }
+
+        //follower id laridan foydalanuvchi malumotlarini olish
+        List<User> subscribers = subscriptions.stream()
+                .map(subscription -> userRepository.findById(subscription.getFollower()))
+                .filter(user -> user.isPresent())
+                .map(user -> user.get())
+                .collect(Collectors.toList());
+
+        if (subscriptions.stream().equals(subscribers.size())){
+            return new ResponseMessage(true, "Here are the subscribers of this channel", subscribers);
+        }else {
+            return new ResponseMessage(true, "Here are the subscribers of this channel, back end subscribers relationni user exists ga tekshirsin!", subscribers);
+        }
+    }
+
+
+
+
+
 
     public ResponseMessage getSubscriptions() {
         User principal = Helper.getCurrentPrincipal();

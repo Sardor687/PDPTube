@@ -13,4 +13,6 @@ public interface VideoRepository extends JpaRepository<Video, Integer> {
    List<Video> findByChannel(Channel channel);
    List<Video> findByCategory(Category category);
    List<Video> findByTitleContainingIgnoreCase(String title);
+   List<Video> findAllByChannelId(Integer channelId);
+   List<Video> findAllByOrderByViewsDesc();
 }

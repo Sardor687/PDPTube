@@ -21,6 +21,13 @@ public class SubscriptionController {
     }
 
 
+    @GetMapping("/subscribers")
+    public ResponseEntity<ResponseMessage> getSubscribers() {
+        ResponseMessage serviceResponse = subscriptionService.getSubscribers();
+        return ResponseEntity.status(serviceResponse.success() ? HttpStatus.OK : HttpStatus.NOT_FOUND).body(serviceResponse);
+    }
+
+
 
 
     @PostMapping("/subscribe/{channelId}")

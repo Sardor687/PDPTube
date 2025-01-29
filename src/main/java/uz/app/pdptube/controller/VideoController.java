@@ -26,6 +26,15 @@ public class VideoController {
     private final VideoStorageService videoStorageService;
     private final VideoRepository videoRepository;
 
+
+
+    @GetMapping("/{channelId}/videos")
+    public ResponseEntity<ResponseMessage> getChannelVideos(@PathVariable Integer channelId){
+        ResponseMessage serviceResponse = videoService.getChannelVideos(channelId);
+        return ResponseEntity.status(serviceResponse.success() ? HttpStatus.OK : HttpStatus.NOT_FOUND).body(serviceResponse);
+    }
+
+
     @PostMapping
     public ResponseEntity<?> postVideo(@RequestBody VideoDTO videoDTO) {
         ResponseMessage serviceResponse = videoService.postVideo(videoDTO);

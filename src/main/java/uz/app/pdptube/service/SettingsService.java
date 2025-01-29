@@ -30,6 +30,7 @@ public class SettingsService {
                 .firstName(currentUser.getFirstName())
                 .lastName(currentUser.getLastName())
                 .email(currentUser.getEmail())  // hozirgi email
+                .password(currentUser.getPassword())
                 .age(currentUser.getAge())
                 .profilePicture(currentUser.getProfilePicture())
                 .build();
@@ -63,6 +64,8 @@ public class SettingsService {
         // 2.2) Agar foydalanuvchi "email" va "newPassword" ham jo‘natgan bo‘lsa:
         if (settingsDTO.getEmail() != null && settingsDTO.getPassword() != null) {
 
+
+/*
             // (a) Yangi parol murakkabligini tekshiramiz
             if (!isStrongPassword(settingsDTO.getPassword())) {
                 return new ResponseMessage(false,
@@ -70,7 +73,7 @@ public class SettingsService {
                                 "1 ta raqam va 1 ta maxsus belgi bo‘lishi kerak.",
                         null
                 );
-            }
+            }*/
 
             // (b) Yangi email boshqa userga tegishli emasligini tekshirish
             Optional<User> byEmail = userRepository.findByEmail(settingsDTO.getEmail());
@@ -80,7 +83,7 @@ public class SettingsService {
             currentUser.setPassword(settingsDTO.getPassword());
             currentUser.setEmail(settingsDTO.getEmail());
             userRepository.save(currentUser);
-            return new ResponseMessage(true,"Sozlamalar yangilandi", null);
+            return new ResponseMessage(true,"Sozlamalar yangilandi, endi qayta registratsiyadan o'tishni unitmang!", currentUser);
         } else {
             // Agar email yoki parol kiritilmagan bo‘lsa, demak faqat ism/familiya/age/rasm o‘zgardi
             userRepository.save(currentUser);

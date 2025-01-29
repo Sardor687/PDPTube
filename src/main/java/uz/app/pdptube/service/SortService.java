@@ -9,6 +9,7 @@ import uz.app.pdptube.helper.Helper;
 import uz.app.pdptube.payload.ResponseMessage;
 import uz.app.pdptube.repository.VideoRepository;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -45,5 +46,15 @@ public class SortService {
         } catch (IllegalArgumentException e) {
             return new ResponseMessage(false, "Invalid category: " + category, null);
         }
+    }
+
+    public ResponseMessage getTopVideos(){
+        List<Video> videos = videoRepository.findAllByOrderByViewsDesc();
+        if (videos.isEmpty()) {
+            return new ResponseMessage(false, "No videos found", null);
+        }
+        videos.sort(Comparator.comparingInt(Video::getViews).reversed()); // Extra safety
+        return new ResponseMessage(true, "Videos in top order", videos);
+
     }
 }

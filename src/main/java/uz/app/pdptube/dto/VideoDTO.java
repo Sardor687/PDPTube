@@ -15,5 +15,5 @@ public class VideoDTO {
     private String description;
     private Category category = Category.UNDEFINED;
     private Integer ageRestriction = 0;
-    private String videoLink;
+//    private String videoLink;
 }

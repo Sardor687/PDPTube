@@ -28,4 +28,10 @@ public class SortController {
         ResponseMessage response = sortService.getVideosByCategory(category);
         return ResponseEntity.status(response.success() ? HttpStatus.OK : HttpStatus.NOT_FOUND).body(response);
     }
+
+    @GetMapping("/top")
+    public ResponseEntity<ResponseMessage> getTopVideos() {
+        ResponseMessage serviceResponse = sortService.getTopVideos();
+        return ResponseEntity.status(serviceResponse.success() ? HttpStatus.OK : HttpStatus.NOT_FOUND).body(serviceResponse);
+    }
 }

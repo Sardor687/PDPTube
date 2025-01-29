@@ -2,11 +2,11 @@ package uz.app.pdptube.filter;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
@@ -19,50 +19,42 @@ public class MyFilter implements Filter {
     @Autowired
     @Lazy
     UserDetailsService userDetailsService;
+
     @Autowired
     private JwtProvider jwtProvider;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        String authorization = request.getHeader("Authorization");
-        if (authorization == null){
-            filterChain.doFilter(request, servletResponse);
+        if (!(servletRequest instanceof HttpServletRequest) || !(servletResponse instanceof HttpServletResponse)) {
+            filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
-        authorization = authorization.substring(7);
-        String email = jwtProvider.getEmailFromToken(authorization);
-            setUserToContext(email);
 
-        filterChain.doFilter(servletRequest, servletResponse);
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+
+        String authorization = request.getHeader("Authorization");
+
+        if (authorization != null && authorization.startsWith("Bearer ")) {
+            try {
+                String token = authorization.substring(7);
+                String email = jwtProvider.getEmailFromToken(token);
+                setUserToContext(email);
+            } catch (Exception e) {
+                // Log the error for debugging but allow request to proceed
+                e.printStackTrace();
+            }
+        }
+
+        // Continue processing the request
+        filterChain.doFilter(request, response);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public void setUserToContext(String email) {
-        // Load the user details (returns UserDetails, not a specific implementation)
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-
-        // Create an authentication token using the UserDetails object
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-        // Set the authentication token in the security context
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
-
-
 }

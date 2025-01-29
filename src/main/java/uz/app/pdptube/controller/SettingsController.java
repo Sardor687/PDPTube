@@ -15,7 +15,7 @@ public class SettingsController {
     private final SettingsService settingsService;
 
     // Foydalanuvchi sozlamalarini olish
-    @GetMapping
+    @GetMapping("/profile")
     public ResponseEntity<?> getSettings() {
         ResponseMessage responseMessage = settingsService.getSettings();
         return ResponseEntity.status(responseMessage.success() ? HttpStatus.OK : HttpStatus.NOT_FOUND)

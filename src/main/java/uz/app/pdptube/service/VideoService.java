@@ -30,6 +30,51 @@ public class VideoService {
     private final UserLikedCommentsRepository userLikedCommentsRepository;
     private final UserDislikedCommentsRepository userDislikedCommentsRepository;
     private final CommentRepository commentRepository;
+    private final ChannelRepository channelRepository;
+
+    public ResponseMessage getChannelVideos(Integer channelId) {
+        //Channelni tekshirish
+        Optional<Channel> channel = channelRepository.findById(channelId);
+        if (channel.isEmpty()) {
+            return new ResponseMessage(false, "Channel does not exist", null);
+        }
+
+        //Channel ga tegishli videolarini olish
+        List<Video> videos = videoRepository.findAllByChannelId(channelId);
+
+        if (videos.isEmpty()) {
+            return new ResponseMessage(true, "No videos found for this channel", List.of());
+        }
+
+        //Faqat yuklangan videolarni olish
+        List<Video> uploadedVideos = videos.stream()
+                .filter(video -> Helper.fileUploaded(video.getVideoLink()))
+                .filter(video -> !ageRestricted(video))
+                .collect(Collectors.toList());
+
+
+        if (uploadedVideos.isEmpty()) {
+            return new ResponseMessage(false, "No videos uploaded for this channel", null);
+        }
+
+        //Yuklangan videolarni qaytaradi agar if dan otsa
+        return new ResponseMessage(true, "Here are the uploaded videos of this channel", uploadedVideos);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public ResponseMessage getVideo(Integer id) {
         Optional<Video> optionalVideo = videoRepository.findById(id);
@@ -101,7 +146,7 @@ public class VideoService {
         if (success) {
             Channel channel = (Channel) responseMessage.data();
             Video video = Video.builder()
-                    .videoLink(videoDTO.getVideoLink())
+                    .videoLink("string")
                     .channel(channel)
                     .description(videoDTO.getDescription())
                     .likes(0)
@@ -239,11 +284,12 @@ public class VideoService {
             return new ResponseMessage(false, "No videos found with the given title", null);
         }
 
-        // VideoDTO'larni yaratish va qaytarish
+        //File link bilan muammo bo'lmasligi uchun o'zgartirildi, frontend uchun
+       /* // VideoDTO'larni yaratish va qaytarish
         List<VideoDTO> videoDTOs = videos.stream()
                 .map(video -> new VideoDTO(video.getTitle(), video.getDescription(), video.getCategory(), video.getAgeRestriction(), video.getVideoLink()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
 
-        return new ResponseMessage(true, "Videos found", videoDTOs);
+        return new ResponseMessage(true, "Videos found", videos);
     }
 }
