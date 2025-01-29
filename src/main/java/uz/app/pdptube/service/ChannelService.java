@@ -7,14 +7,13 @@ import org.springframework.transaction.annotation.Transactional;
 import uz.app.pdptube.dto.ChannelDTO;
 import uz.app.pdptube.entity.Channel;
 import uz.app.pdptube.entity.ChannelOwner;
+import uz.app.pdptube.entity.Subscription;
 import uz.app.pdptube.entity.User;
 import uz.app.pdptube.helper.Helper;
 import uz.app.pdptube.payload.ResponseMessage;
-import uz.app.pdptube.repository.ChannelOwnerRepository;
-import uz.app.pdptube.repository.ChannelRepository;
-import uz.app.pdptube.repository.UserRepository;
-import uz.app.pdptube.repository.VideoRepository;
+import uz.app.pdptube.repository.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +22,7 @@ public class ChannelService {
     private final ChannelRepository channelRepository;
     private final ChannelOwnerRepository channelOwnerRepository;
     private final VideoRepository videoRepository;
+    private final SubscriptionRepository subscriptionRepository;
 
     public ResponseMessage getChannel(){
         User principal = Helper.getCurrentPrincipal();
@@ -85,6 +85,11 @@ public class ChannelService {
     }
     private void deleteAllVideosByChannelId(Channel channel) {
         videoRepository.deleteAllByChannel(channel);
+    }
+
+    public List<Integer> getAllFollowers(Integer channelId) {
+        List<Subscription> subscriptions = subscriptionRepository.findAllByChannel(channelId);
+        return subscriptions.stream().map(subscription -> subscription.getFollower()).toList();
     }
 }
 

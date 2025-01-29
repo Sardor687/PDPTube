@@ -5,16 +5,11 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
-import uz.app.pdptube.entity.Channel;
-import uz.app.pdptube.entity.ChannelOwner;
-import uz.app.pdptube.entity.Subscription;
-import uz.app.pdptube.entity.User;
+import uz.app.pdptube.entity.*;
+import uz.app.pdptube.enums.NotificationType;
 import uz.app.pdptube.helper.Helper;
 import uz.app.pdptube.payload.ResponseMessage;
-import uz.app.pdptube.repository.ChannelOwnerRepository;
-import uz.app.pdptube.repository.ChannelRepository;
-import uz.app.pdptube.repository.SubscriptionRepository;
-import uz.app.pdptube.repository.UserRepository;
+import uz.app.pdptube.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +24,7 @@ public class SubscriptionService {
     private final ChannelService channelService;
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
+    private final NotificationRepository notificationRepository;
 
 
     public ResponseMessage getSubscribers() {
@@ -57,16 +53,12 @@ public class SubscriptionService {
                 .map(user -> user.get())
                 .collect(Collectors.toList());
 
-        if (subscriptions.stream().equals(subscribers.size())){
+        if (subscriptions.stream().equals(subscribers.size())) {
             return new ResponseMessage(true, "Here are the subscribers of this channel", subscribers);
-        }else {
+        } else {
             return new ResponseMessage(true, "Here are the subscribers of this channel, back end subscribers relationni user exists ga tekshirsin!", subscribers);
         }
     }
-
-
-
-
 
 
     public ResponseMessage getSubscriptions() {
@@ -98,7 +90,6 @@ public class SubscriptionService {
         } else {
 
 
-
             if (channelOwner.get().getOwner().equals(currentUser.getId())) {
                 return new ResponseMessage(false, "You cannot subscribe to your own channel", null);
             }
@@ -110,10 +101,18 @@ public class SubscriptionService {
             }
 
 
+            ChannelOwner relation = channelOwner.get();
+            Integer ownerId = relation.getOwner();
             Subscription newFollower = new Subscription();
             newFollower.setChannel(channelId);
             newFollower.setFollower(currentUser.getId());
             subscriptionRepository.save(newFollower);
+            Notification notification = Notification.builder()
+                    .type(NotificationType.NEW_FOLLOWER)
+                    .subjectId(Helper.getCurrentPrincipal().getId())
+                    .userId(ownerId)
+                    .build();
+            notificationRepository.save(notification);
 
             return new ResponseMessage(true, "Successfully subscribed to the channel", newFollower);
         }

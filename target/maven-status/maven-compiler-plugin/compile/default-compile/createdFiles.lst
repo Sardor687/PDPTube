@@ -1,3 +1,4 @@
+uz\app\pdptube\entity\Notification$NotificationBuilder.class
 uz\app\pdptube\service\SortService.class
 uz\app\pdptube\dto\CommentDTO$CommentDTOBuilder.class
 uz\app\pdptube\entity\User$UserBuilder.class
@@ -12,6 +13,7 @@ uz\app\pdptube\config\SwaggerConfiguration.class
 uz\app\pdptube\entity\Subscription.class
 uz\app\pdptube\entity\UserLikedComments.class
 uz\app\pdptube\repository\ChannelOwnerRepository.class
+uz\app\pdptube\repository\NotificationRepository.class
 uz\app\pdptube\service\CommentService.class
 uz\app\pdptube\controller\FileController.class
 uz\app\pdptube\payload\ResponseMessage.class
@@ -30,10 +32,13 @@ uz\app\pdptube\service\SettingsService$VerificationData.class
 uz\app\pdptube\repository\ChannelRepository.class
 uz\app\pdptube\dto\ReplyDTO.class
 uz\app\pdptube\entity\Comment$CommentBuilder.class
+uz\app\pdptube\entity\Notification.class
 uz\app\pdptube\enums\Category.class
+uz\app\pdptube\controller\NotificationController.class
 uz\app\pdptube\dto\VideoDTO.class
 uz\app\pdptube\repository\CommentRepository.class
 uz\app\pdptube\service\HistoryService.class
+uz\app\pdptube\service\NotificationService.class
 uz\app\pdptube\controller\ChannelController.class
 uz\app\pdptube\controller\CommentController.class
 uz\app\pdptube\repository\SubscriptionRepository.class
@@ -71,6 +76,7 @@ uz\app\pdptube\dto\ChannelDTO$ChannelDTOBuilder.class
 uz\app\pdptube\dto\SignInDTO.class
 uz\app\pdptube\entity\PlaylistVideos.class
 uz\app\pdptube\dto\SettingsDTO.class
+uz\app\pdptube\enums\NotificationType.class
 uz\app\pdptube\entity\Video$VideoBuilder.class
 uz\app\pdptube\service\VideoService.class
 uz\app\pdptube\PdpTubeApplication.class

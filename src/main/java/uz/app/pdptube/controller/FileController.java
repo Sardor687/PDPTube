@@ -3,22 +3,27 @@ package uz.app.pdptube.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import uz.app.pdptube.entity.Channel;
 import uz.app.pdptube.entity.ChannelOwner;
+import uz.app.pdptube.entity.Notification;
 import uz.app.pdptube.entity.Video;
+import uz.app.pdptube.enums.NotificationType;
 import uz.app.pdptube.helper.Helper;
 import uz.app.pdptube.payload.ResponseMessage;
 import uz.app.pdptube.repository.ChannelOwnerRepository;
+import uz.app.pdptube.repository.NotificationRepository;
 import uz.app.pdptube.repository.VideoRepository;
-import uz.app.pdptube.service.VideoService;
-import uz.app.pdptube.service.VideoStorageService;
+import uz.app.pdptube.service.*;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -32,13 +37,21 @@ public class FileController {
     private final VideoStorageService videoStorageService;
     private final VideoRepository videoRepository;
     private final ChannelOwnerRepository channelOwnerRepository;
+    private final SubscriptionService subscriptionService;
+    private final ChannelService channelService;
+    private final NotificationService notificationService;
+    private final NotificationRepository notificationRepository;
 
     @Autowired
-    public FileController(VideoService videoService, VideoStorageService videoStorageService, VideoRepository videoRepository, ChannelOwnerRepository channelOwnerRepository) {
+    public FileController(VideoService videoService, VideoStorageService videoStorageService, VideoRepository videoRepository, ChannelOwnerRepository channelOwnerRepository, SubscriptionService subscriptionService, ChannelService channelService, NotificationService notificationService, NotificationRepository notificationRepository) {
         this.videoService = videoService;
         this.videoStorageService = videoStorageService;
         this.videoRepository = videoRepository;
         this.channelOwnerRepository = channelOwnerRepository;
+        this.subscriptionService = subscriptionService;
+        this.channelService = channelService;
+        this.notificationService = notificationService;
+        this.notificationRepository = notificationRepository;
     }
 
     /**
@@ -72,9 +85,23 @@ public class FileController {
         ChannelOwner channelOwner = optionalChannel.get();
         if (Helper.getCurrentPrincipal().getId().equals(channelOwner.getOwner())) {
                 if (video.getVideoLink().equalsIgnoreCase("String") || video.getVideoLink().isEmpty() || video.getVideoLink().isBlank()) {
+
                     String videoUrl = videoStorageService.storeVideo(file);
                     video.setVideoLink(videoUrl);
                     videoRepository.save(video);
+                    Channel channel = video.getChannel();
+                    List<Integer> allFollowers = channelService.getAllFollowers(channel.getId());
+                      Notification notification = Notification.builder()
+                            .type(NotificationType.NEW_VIDEO_POSTED)
+                            .subjectId(video.getId())
+                            .build();
+
+                    for (Integer follower : allFollowers) {
+                        notification.setUserId(follower);
+                        notificationRepository.save(notification);
+                        notification.setId(null);
+                    }
+
                     return ResponseEntity.status(HttpStatus.CREATED).body(video.getVideoLink());
                 }else {
                     return ResponseEntity.status(HttpStatus.CONFLICT).body("this video already has a file:  "+ video.getVideoLink());
