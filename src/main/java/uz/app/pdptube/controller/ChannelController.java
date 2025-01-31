@@ -39,6 +39,12 @@ public class ChannelController {
         return ResponseEntity.status(serviceResponse.success() ? HttpStatus.OK : HttpStatus.BAD_REQUEST).body(serviceResponse);
     }
 
+    @GetMapping("/{channelId}")
+    public ResponseEntity<ResponseMessage> getSpecificChannelAttributes(@PathVariable Integer channelId) {
+        ResponseMessage serviceResponse = channelService.getFollowersNumber(channelId);
+        return ResponseEntity.status(serviceResponse.success() ? HttpStatus.OK : HttpStatus.NOT_FOUND).body(serviceResponse);
+    }
+
 
 
 

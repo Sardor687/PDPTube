@@ -1,6 +1,7 @@
 package uz.app.pdptube.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,6 +91,18 @@ public class ChannelService {
     public List<Integer> getAllFollowers(Integer channelId) {
         List<Subscription> subscriptions = subscriptionRepository.findAllByChannel(channelId);
         return subscriptions.stream().map(subscription -> subscription.getFollower()).toList();
+    }
+
+
+    public ResponseMessage getFollowersNumber(Integer channelId) {
+        if (channelRepository.existsById(channelId)) {
+            List<Subscription> subscriptions = subscriptionRepository.findAllByChannel(channelId);
+            int followers = subscriptions.size();
+            return new ResponseMessage(true, "Here is the number of followers", followers);
+        }else {
+            return new ResponseMessage(false, "channel with this id doesnt exist", channelId);
+        }
+
     }
 }
 
