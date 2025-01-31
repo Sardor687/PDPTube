@@ -82,7 +82,7 @@ public class VideoService {
         if (optionalVideo.isPresent()) {
             Video video = optionalVideo.get();
             if (ageRestricted(video)) {
-                return new ResponseMessage(false, "you are not old enough!", Helper.getCurrentPrincipal().getAge());
+                return new ResponseMessage(false, "you are not old enough or haven't signed in to watch this video!", Helper.getCurrentPrincipal().getAge());
             }
             if (!fileUploaded(video.getVideoLink())){
                 return new ResponseMessage(false, "video doesn't have its file yet, first upload the file!", video);
@@ -144,6 +144,13 @@ public class VideoService {
         ResponseMessage responseMessage = channelService.getChannel();
         boolean success = responseMessage.success();
         if (success) {
+          int input = videoDTO.getAgeRestriction();
+           int age = Helper.getCurrentPrincipal().getAge();
+           boolean modified = false;
+            if (input > age) {
+                videoDTO.setAgeRestriction(age);
+                modified = true;
+            }
             Channel channel = (Channel) responseMessage.data();
             Video video = Video.builder()
                     .videoLink("string")
@@ -157,7 +164,9 @@ public class VideoService {
                     .views(0)
                     .build();
             videoRepository.save(video);
-            return new ResponseMessage(true, "Video posted, now please upload the file!", video);
+            String message = "Video posted, now please upload the file";
+            if (modified) return new ResponseMessage(true, message + ", and age restriction is set to the highest allowed to you", video);
+            return new ResponseMessage(true,message ,video);
         } else {
             return new ResponseMessage(false, "you don't have a channel , so you can't post video", videoDTO);
         }
@@ -171,7 +180,7 @@ public class VideoService {
         if (optionalVideo.isPresent()) {
             Video video = optionalVideo.get();
             if (ageRestricted(video)) {
-                return new ResponseMessage(false, "you are not old enough!", Helper.getCurrentPrincipal().getAge());
+                return new ResponseMessage(false, "you are not old enough or haven't signed in!", Helper.getCurrentPrincipal().getAge());
             }
             boolean previouslyLiked = userLikedVideosRepository.existsByOwnerAndVideo(Helper.getCurrentPrincipal().getId(), videoId);
             if (previouslyLiked) {
@@ -206,7 +215,7 @@ public class VideoService {
         if (optionalVideo.isPresent()) {
             Video video = optionalVideo.get();
             if (ageRestricted(video)) {
-                return new ResponseMessage(false, "you are not old enough!", Helper.getCurrentPrincipal().getAge());
+                return new ResponseMessage(false, "you are not old enough or haven't signed in!", Helper.getCurrentPrincipal().getAge());
             }
             boolean previouslyDisliked = userDislikedVideosRepository.existsByOwnerAndVideo(Helper.getCurrentPrincipal().getId(), videoId);
             if (previouslyDisliked) {
@@ -289,7 +298,9 @@ public class VideoService {
         List<VideoDTO> videoDTOs = videos.stream()
                 .map(video -> new VideoDTO(video.getTitle(), video.getDescription(), video.getCategory(), video.getAgeRestriction(), video.getVideoLink()))
                 .collect(Collectors.toList());*/
-
-        return new ResponseMessage(true, "Videos found", videos);
+        List<Video> filteredVideos = videos.stream().filter(video -> {
+            return Helper.fileUploaded(video.getVideoLink());
+        }).toList();
+        return new ResponseMessage(true, "Videos found", filteredVideos);
     }
 }

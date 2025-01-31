@@ -53,7 +53,7 @@ public class SubscriptionService {
                 .map(user -> user.get())
                 .collect(Collectors.toList());
 
-        if (subscriptions.stream().equals(subscribers.size())) {
+        if (subscriptions.size() == subscribers.size()) {
             return new ResponseMessage(true, "Here are the subscribers of this channel", subscribers);
         } else {
             return new ResponseMessage(true, "Here are the subscribers of this channel, back end subscribers relationni user exists ga tekshirsin!", subscribers);

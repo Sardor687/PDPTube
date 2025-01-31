@@ -13,7 +13,12 @@ public class Helper {
 
     public static boolean ageRestricted(Video video) {
         int ageRestriction = video.getAgeRestriction();
-        int age = Helper.getCurrentPrincipal().getAge();
+        User user = Helper.getCurrentPrincipal();
+        if (user == null) {
+            return true;
+        }
+        Integer age = user.getAge();
+
         return (ageRestriction > age);
     }
 
