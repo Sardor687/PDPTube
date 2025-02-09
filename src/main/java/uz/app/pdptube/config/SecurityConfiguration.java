@@ -99,7 +99,8 @@ public class SecurityConfiguration {
         config.setAllowedOrigins(List.of(
                 "http://localhost:8080",
                 "https://pdptube-production.up.railway.app",
-                "http://localhost:5173"));
+                "http://localhost:5173",
+                "http://localhost:3000"));
         config.setAllowCredentials(true);
         source.registerCorsConfiguration("/**", config);
         return source;
