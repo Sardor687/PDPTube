@@ -18,6 +18,7 @@ import uz.app.pdptube.enums.NotificationType;
 import uz.app.pdptube.helper.Helper;
 import uz.app.pdptube.payload.ResponseMessage;
 import uz.app.pdptube.repository.ChannelOwnerRepository;
+import uz.app.pdptube.repository.ChannelRepository;
 import uz.app.pdptube.repository.NotificationRepository;
 import uz.app.pdptube.repository.VideoRepository;
 import uz.app.pdptube.service.*;
@@ -41,9 +42,11 @@ public class FileController {
     private final ChannelService channelService;
     private final NotificationService notificationService;
     private final NotificationRepository notificationRepository;
+    private final ChannelRepository channelRepository;
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    public FileController(VideoService videoService, VideoStorageService videoStorageService, VideoRepository videoRepository, ChannelOwnerRepository channelOwnerRepository, SubscriptionService subscriptionService, ChannelService channelService, NotificationService notificationService, NotificationRepository notificationRepository) {
+    public FileController(VideoService videoService, VideoStorageService videoStorageService, VideoRepository videoRepository, ChannelOwnerRepository channelOwnerRepository, SubscriptionService subscriptionService, ChannelService channelService, NotificationService notificationService, NotificationRepository notificationRepository, ChannelRepository channelRepository, FileStorageService fileStorageService) {
         this.videoService = videoService;
         this.videoStorageService = videoStorageService;
         this.videoRepository = videoRepository;
@@ -52,6 +55,8 @@ public class FileController {
         this.channelService = channelService;
         this.notificationService = notificationService;
         this.notificationRepository = notificationRepository;
+        this.channelRepository = channelRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     /**
@@ -112,25 +117,51 @@ public class FileController {
 
     }
 
-    /**
-     * Deletes a video from the storage (e.g., S3) by its URL.
-     *
-     * @param videoUrl URL of the video to delete
-     * @return Response indicating success or failure
-     */
-    //When we delete a video , the url will be lost in database koyeb ,so this isn't important right now.
-   /* @DeleteMapping("/delete")
-    @Operation(summary = "Delete a video from storage by URL")
-    public ResponseEntity<String> deleteVideo(@RequestParam("videoUrl") String videoUrl) {
-        try {
-            videoStorageService.deleteVideo(videoUrl);
-            return ResponseEntity.ok("Video deleted successfully");
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Video not found: " + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to delete video: " + e.getMessage());
+//    /**
+//     * Deletes a video from the storage (e.g., S3) by its URL.
+//     *
+//     * @param videoUrl URL of the video to delete
+//     * @return Response indicating success or failure
+//     */
+//    //When we delete a video , the url will be lost in database koyeb ,so this isn't important right now.
+//   /* @DeleteMapping("/delete")
+//    @Operation(summary = "Delete a video from storage by URL")
+//    public ResponseEntity<String> deleteVideo(@RequestParam("videoUrl") String videoUrl) {
+//        try {
+//            videoStorageService.deleteVideo(videoUrl);
+//            return ResponseEntity.ok("Video deleted successfully");
+//        } catch (EntityNotFoundException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                    .body("Video not found: " + e.getMessage());
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body("Failed to delete video: " + e.getMessage());
+//        }
+//    }*/
+
+
+    @PostMapping(value = "/upload/profile-image/{channelId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Upload a profile image for a channel to S3")
+    public ResponseEntity<String> uploadProfileImage(@RequestParam("file") MultipartFile file, @PathVariable Integer channelId) throws IOException {
+        // Ensure the file is not empty
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("No profile image file provided");
         }
-    }*/
+
+        // Fetch the channel by ID
+        Optional<Channel> optionalChannel = channelRepository.findById(channelId);
+        if (!optionalChannel.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Channel not found with id " + channelId);
+        }
+        Channel channel = optionalChannel.get();
+
+        // Use the fileStorageService to upload the image to S3
+        String imageUrl = fileStorageService.uploadFile(file);
+
+        // Save the URL of the uploaded image to the channel entity
+        channel.setProfilePicture(imageUrl);  // Assuming there's a method like this
+        channelRepository.save(channel);  // Save the channel with the updated profile image URL
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(imageUrl);
+    }
 }

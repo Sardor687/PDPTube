@@ -82,5 +82,6 @@ uz\app\pdptube\service\VideoService.class
 uz\app\pdptube\PdpTubeApplication.class
 uz\app\pdptube\controller\HistoryController.class
 uz\app\pdptube\entity\Comment.class
+uz\app\pdptube\service\FileStorageService.class
 uz\app\pdptube\service\SubscriptionService.class
 uz\app\pdptube\repository\HistoryVideosRepository.class

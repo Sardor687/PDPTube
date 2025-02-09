@@ -61,6 +61,7 @@ C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\AuthService.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\ChannelService.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\CommentService.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\CustomUserDetailsService.java
+C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\FileStorageService.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\HistoryService.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\NotificationService.java
 C:\FINAL\PdpTube\src\main\java\uz\app\pdptube\service\PlaylistService.java
